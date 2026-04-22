@@ -1,52 +1,39 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis
+  Radar, RadarChart, PolarGrid,
+  PolarAngleAxis, PolarRadiusAxis,
+  ResponsiveContainer
 } from "recharts";
 
-export default function RadarChartComponent() {
-
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-
-      const res = await axios.get(
-        `https://proyecto-identidad-profesional.onrender.com/api/skills/${user._id}`
-      );
-
-      const skills = res.data;
-
-      const formatted = [
-        { skill: "Comunicación", value: skills?.comunicacion || 0 },
-        { skill: "Liderazgo", value: skills?.liderazgo || 0 },
-        { skill: "Trabajo", value: skills?.trabajoEquipo || 0 },
-        { skill: "Creatividad", value: skills?.creatividad || 0 },
-        { skill: "Resolución", value: skills?.resolucion || 0 }
-      ];
-
-      setData(formatted);
-    };
-
-    fetchData();
-  }, []);
+export default function RadarChartComponent({ data }) {
+  const chartData = data || [
+    { subject: "Comunicación", value: 80 },
+    { subject: "Liderazgo", value: 70 },
+    { subject: "Trabajo en equipo", value: 85 },
+    { subject: "Creatividad", value: 75 },
+    { subject: "Resolución", value: 80 }
+  ];
 
   return (
-    <RadarChart width={300} height={250} data={data}>
-      <PolarGrid />
-      <PolarAngleAxis dataKey="skill" />
-      <PolarRadiusAxis />
-      <Radar
-        dataKey="value"
-        stroke="#2563eb"
-        fill="#3b82f6"
-        fillOpacity={0.6}
-      />
-    </RadarChart>
+    <ResponsiveContainer width="100%" height={350}>
+      <RadarChart data={chartData} outerRadius="70%">
+        
+        <PolarGrid />
+
+        {/* 🔥 AQUÍ ESTÁ LA CLAVE */}
+        <PolarAngleAxis 
+          dataKey="subject" 
+          tick={{ fontSize: 12 }} 
+        />
+
+        <PolarRadiusAxis />
+
+        <Radar
+          dataKey="value"
+          stroke="#2563eb"
+          fill="#3b82f6"
+          fillOpacity={0.6}
+        />
+      </RadarChart>
+    </ResponsiveContainer>
   );
 }

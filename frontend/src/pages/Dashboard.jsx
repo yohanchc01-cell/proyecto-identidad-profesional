@@ -34,12 +34,12 @@ export default function Dashboard() {
     fetchSkills();
   }, []);
 
-  return (
+    return (
     <div id="pdf-content" className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-50 p-6">
 
       {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <h1 className="text-3xl font-bold text-gray-800 text-center md:text-left">
+        <h1 className="text-3xl font-bold text-gray-800">
           👋 Hola, {user?.nombre}
           <span className="text-sm text-gray-500 ml-2">({user?.role})</span>
         </h1>
@@ -64,20 +64,41 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* PERFIL */}
-      <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
-        <h2 className="text-xl font-semibold mb-2 text-blue-600">
-          Perfil Profesional
-        </h2>
-        <p className="text-gray-600 leading-relaxed">
-          Estudiante en formación con enfoque en desarrollo de software, habilidades blandas y crecimiento profesional continuo.
-        </p>
+      {/* PERFIL + ANALISIS */}
+      <div className="grid md:grid-cols-2 gap-6 mb-6">
+
+        {/* PERFIL */}
+        <div className="bg-white p-6 rounded-2xl shadow-lg">
+          <h2 className="text-xl font-semibold mb-2 text-blue-600">
+            Perfil Profesional
+          </h2>
+          <p className="text-gray-600">
+            Estudiante en formación con enfoque en desarrollo de software y habilidades blandas.
+          </p>
+        </div>
+
+        {/* ANALISIS */}
+        {analysis && (
+          <div className="bg-white p-6 rounded-2xl shadow-lg">
+            <h3 className="font-semibold mb-4 text-purple-600">
+              🧠 Análisis Inteligente
+            </h3>
+
+            <div className="grid grid-cols-2 gap-2 text-gray-600 text-sm">
+              <p>Comunicación: <b>{analysis.comunicacion}</b></p>
+              <p>Liderazgo: <b>{analysis.liderazgo}</b></p>
+              <p>Trabajo en equipo: <b>{analysis.trabajoEquipo}</b></p>
+              <p>Creatividad: <b>{analysis.creatividad}</b></p>
+              <p>Resolución: <b>{analysis.resolucion}</b></p>
+            </div>
+          </div>
+        )}
+
       </div>
 
-      {/* GRID PRINCIPAL */}
+      {/* HABILIDADES + RADAR */}
       <div className="grid md:grid-cols-2 gap-6">
 
-        {/* HABILIDADES */}
         <div className="bg-white p-6 rounded-2xl shadow-lg">
           <h3 className="font-semibold mb-4 text-gray-700">
             Habilidades
@@ -93,7 +114,6 @@ export default function Dashboard() {
           </ul>
         </div>
 
-        {/* RADAR */}
         <div className="bg-white p-6 rounded-2xl shadow-lg">
           <h3 className="font-semibold mb-4 text-center text-gray-700">
             Mapa de Competencias
@@ -105,23 +125,6 @@ export default function Dashboard() {
         </div>
 
       </div>
-
-      {/* ANÁLISIS */}
-      {analysis && (
-        <div className="mt-6 bg-white p-6 rounded-2xl shadow-lg">
-          <h3 className="font-semibold mb-4 text-purple-600">
-            🧠 Análisis Inteligente
-          </h3>
-
-          <div className="grid md:grid-cols-2 gap-4 text-gray-600">
-            <p>Comunicación: <b>{analysis.comunicacion}</b></p>
-            <p>Liderazgo: <b>{analysis.liderazgo}</b></p>
-            <p>Trabajo en equipo: <b>{analysis.trabajoEquipo}</b></p>
-            <p>Creatividad: <b>{analysis.creatividad}</b></p>
-            <p>Resolución: <b>{analysis.resolucion}</b></p>
-          </div>
-        </div>
-      )}
 
       {/* EXTRA */}
       <div className="grid md:grid-cols-2 gap-6 mt-6">
