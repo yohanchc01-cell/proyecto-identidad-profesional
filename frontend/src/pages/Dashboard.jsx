@@ -7,12 +7,10 @@ import html2canvas from "html2canvas";
 
 export default function Dashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
-
   const [analysis, setAnalysis] = useState(null);
 
   const generatePDF = async () => {
     const element = document.getElementById("pdf-content");
-
     const canvas = await html2canvas(element);
     const imgData = canvas.toDataURL("image/png");
 
@@ -27,11 +25,9 @@ export default function Dashboard() {
         const res = await axios.get(
           `https://proyecto-identidad-profesional.onrender.com/api/skills/${user._id}`
         );
-
-        const result = analyzeSkills(res.data || {});
-        setAnalysis(result);
+        setAnalysis(analyzeSkills(res.data || {}));
       } catch (error) {
-        console.log("Error obteniendo skills", error);
+        console.log(error);
       }
     };
 
@@ -39,104 +35,116 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div id="pdf-content" className="min-h-screen bg-gray-100 p-8">
+    <div id="pdf-content" className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-50 p-6">
 
       {/* HEADER */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">
-          Bienvenido {user?.nombre} ({user?.role})
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <h1 className="text-3xl font-bold text-gray-800 text-center md:text-left">
+          👋 Hola, {user?.nombre}
+          <span className="text-sm text-gray-500 ml-2">({user?.role})</span>
         </h1>
 
         <div className="flex gap-2">
+          <button
+            onClick={generatePDF}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
+          >
+            Descargar PDF
+          </button>
+
           <button
             onClick={() => {
               localStorage.clear();
               window.location.reload();
             }}
-            className="bg-red-500 text-white px-4 py-2 rounded"
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow"
           >
             Cerrar sesión
-          </button>
-
-          <button
-            onClick={generatePDF}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Descargar PDF
           </button>
         </div>
       </div>
 
-      {/* PERFIL PROFESIONAL */}
-      <div className="bg-white p-6 rounded-xl shadow mb-6">
-        <h2 className="text-xl font-semibold mb-2">Perfil Profesional</h2>
-        <p className="text-gray-600">
-          Estudiante en formación con habilidades en desarrollo, trabajo en equipo y pensamiento crítico.
-          Interesado en el crecimiento profesional y la mejora continua.
+      {/* PERFIL */}
+      <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
+        <h2 className="text-xl font-semibold mb-2 text-blue-600">
+          Perfil Profesional
+        </h2>
+        <p className="text-gray-600 leading-relaxed">
+          Estudiante en formación con enfoque en desarrollo de software, habilidades blandas y crecimiento profesional continuo.
         </p>
       </div>
 
-      {/* GRID */}
-      <div className="grid grid-cols-2 gap-6">
+      {/* GRID PRINCIPAL */}
+      <div className="grid md:grid-cols-2 gap-6">
 
         {/* HABILIDADES */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="font-semibold mb-3">Habilidades</h3>
-          <ul className="text-gray-600 space-y-2">
-            <li>✔ Comunicación</li>
-            <li>✔ Liderazgo</li>
-            <li>✔ Trabajo en equipo</li>
-            <li>✔ Creatividad</li>
-            <li>✔ Resolución de problemas</li>
+        <div className="bg-white p-6 rounded-2xl shadow-lg">
+          <h3 className="font-semibold mb-4 text-gray-700">
+            Habilidades
+          </h3>
+
+          <ul className="space-y-3">
+            {["Comunicación", "Liderazgo", "Trabajo en equipo", "Creatividad", "Resolución"].map((h, i) => (
+              <li key={i} className="flex items-center gap-2 text-gray-600">
+                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                {h}
+              </li>
+            ))}
           </ul>
         </div>
 
         {/* RADAR */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="font-semibold mb-3 text-center">
+        <div className="bg-white p-6 rounded-2xl shadow-lg">
+          <h3 className="font-semibold mb-4 text-center text-gray-700">
             Mapa de Competencias
           </h3>
 
-          <div className="w-full h-[400px] flex justify-center items-center">
+          <div className="h-[350px] flex justify-center items-center">
             <RadarChartComponent />
           </div>
         </div>
 
       </div>
 
-      {/* ANÁLISIS IA */}
+      {/* ANÁLISIS */}
       {analysis && (
-        <div className="mt-6 bg-white p-6 rounded-xl shadow">
-          <h3 className="font-semibold mb-4">🧠 Análisis Inteligente</h3>
+        <div className="mt-6 bg-white p-6 rounded-2xl shadow-lg">
+          <h3 className="font-semibold mb-4 text-purple-600">
+            🧠 Análisis Inteligente
+          </h3>
 
-          <p>Comunicación: <b>{analysis.comunicacion}</b></p>
-          <p>Liderazgo: <b>{analysis.liderazgo}</b></p>
-          <p>Trabajo en equipo: <b>{analysis.trabajoEquipo}</b></p>
-          <p>Creatividad: <b>{analysis.creatividad}</b></p>
-          <p>Resolución: <b>{analysis.resolucion}</b></p>
+          <div className="grid md:grid-cols-2 gap-4 text-gray-600">
+            <p>Comunicación: <b>{analysis.comunicacion}</b></p>
+            <p>Liderazgo: <b>{analysis.liderazgo}</b></p>
+            <p>Trabajo en equipo: <b>{analysis.trabajoEquipo}</b></p>
+            <p>Creatividad: <b>{analysis.creatividad}</b></p>
+            <p>Resolución: <b>{analysis.resolucion}</b></p>
+          </div>
         </div>
       )}
 
-      {/* NUEVOS MÓDULOS */}
-      <div className="grid grid-cols-2 gap-6 mt-6">
+      {/* EXTRA */}
+      <div className="grid md:grid-cols-2 gap-6 mt-6">
 
-        {/* PROYECTOS */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="font-semibold mb-3">🚀 Proyectos recomendados</h3>
-          <ul className="text-gray-600 space-y-2">
-            <li>• Sistema web de gestión académica</li>
-            <li>• App móvil de seguimiento de hábitos</li>
-            <li>• Plataforma de análisis de datos</li>
+        <div className="bg-white p-6 rounded-2xl shadow-lg">
+          <h3 className="font-semibold mb-3 text-green-600">
+            🚀 Proyectos recomendados
+          </h3>
+          <ul className="space-y-2 text-gray-600">
+            <li>• Sistema web académico</li>
+            <li>• App de productividad</li>
+            <li>• Dashboard de datos</li>
           </ul>
         </div>
 
-        {/* OPORTUNIDADES */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="font-semibold mb-3">🌟 Oportunidades destacadas</h3>
-          <ul className="text-gray-600 space-y-2">
-            <li>• Convocatoria prácticas profesionales</li>
-            <li>• Curso avanzado en desarrollo web</li>
-            <li>• Hackathon universitario</li>
+        <div className="bg-white p-6 rounded-2xl shadow-lg">
+          <h3 className="font-semibold mb-3 text-yellow-600">
+            🌟 Oportunidades
+          </h3>
+          <ul className="space-y-2 text-gray-600">
+            <li>• Prácticas profesionales</li>
+            <li>• Curso avanzado</li>
+            <li>• Hackathon</li>
           </ul>
         </div>
 
