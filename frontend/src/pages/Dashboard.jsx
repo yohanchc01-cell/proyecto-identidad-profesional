@@ -131,7 +131,7 @@ export default function Dashboard() {
 
         <div className="bg-white p-6 rounded-2xl shadow-lg">
           <h3 className="font-semibold mb-3 text-green-600">
-            🚀 Proyectos recomendados
+            🚀 Proyectos Destacados
           </h3>
           <ul className="space-y-2 text-gray-600">
             <li>• Diseño e implementación de un programa de actividad física para mejorar la salud en comunidades escolares.</li>
@@ -142,7 +142,7 @@ export default function Dashboard() {
 
         <div className="bg-white p-6 rounded-2xl shadow-lg">
           <h3 className="font-semibold mb-3 text-yellow-600">
-            🌟 Oportunidades
+            🌟 Oportunidades Recomendadas
           </h3>
           <ul className="space-y-2 text-gray-600">
             <li>• Participación en ligas deportivas locales y programas de entrenamiento</li>
