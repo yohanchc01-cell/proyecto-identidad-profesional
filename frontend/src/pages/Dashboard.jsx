@@ -73,7 +73,7 @@ export default function Dashboard() {
             Perfil Profesional
           </h2>
           <p className="text-gray-600">
-            Estudiante en formación con enfoque en desarrollo de software y habilidades blandas.
+            Estudiante de Licenciatura en Educación Física y Deporte en formación integral, con interés en la promoción de estilos de vida saludables, el desarrollo de habilidades motrices y el bienestar físico de la población. Posee competencias en trabajo en equipo, liderazgo y planificación de actividades deportivas y recreativas. Se caracteriza por su compromiso, disciplina y capacidad para motivar a otros, contribuyendo al desarrollo físico, social y emocional de niños, jóvenes y adultos a través del deporte y la actividad física.
           </p>
         </div>
 
@@ -134,9 +134,9 @@ export default function Dashboard() {
             🚀 Proyectos recomendados
           </h3>
           <ul className="space-y-2 text-gray-600">
-            <li>• Sistema web académico</li>
-            <li>• App de productividad</li>
-            <li>• Dashboard de datos</li>
+            <li>• Diseño e implementación de un programa de actividad física para mejorar la salud en comunidades escolares.</li>
+            <li>• Organización de eventos deportivos comunitarios para fomentar la inclusión y el trabajo en equipo</li>
+            <li>• Creación de una escuela deportiva enfocada en el desarrollo de habilidades básicas en niños</li>
           </ul>
         </div>
 
@@ -145,9 +145,10 @@ export default function Dashboard() {
             🌟 Oportunidades
           </h3>
           <ul className="space-y-2 text-gray-600">
-            <li>• Prácticas profesionales</li>
-            <li>• Curso avanzado</li>
-            <li>• Hackathon</li>
+            <li>• Participación en ligas deportivas locales y programas de entrenamiento</li>
+            <li>• Cursos y certificaciones en entrenamiento deportivo, recreación y actividad física</li>
+            <li>• Participación en eventos académicos y deportivos como congresos, seminarios y torneos</li>
+            <li>• Convocatorias para proyectos sociales enfocados en deporte y salud</li>
           </ul>
         </div>
 
