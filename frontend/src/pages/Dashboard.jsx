@@ -11,19 +11,16 @@ export default function Dashboard() {
   const [analysis, setAnalysis] = useState(null);
 
   const generatePDF = async () => {
-  const element = document.getElementById("pdf-content");
+    const element = document.getElementById("pdf-content");
 
-  const canvas = await html2canvas(element);
-  const imgData = canvas.toDataURL("image/png");
+    const canvas = await html2canvas(element);
+    const imgData = canvas.toDataURL("image/png");
 
-  const pdf = new jsPDF();
+    const pdf = new jsPDF();
+    pdf.addImage(imgData, "PNG", 10, 10, 180, 0);
+    pdf.save("perfil_profesional.pdf");
+  };
 
-  pdf.addImage(imgData, "PNG", 10, 10, 180, 0);
-  pdf.save("perfil_profesional.pdf");
-};
-
-
-  // 🔥 AQUÍ VA LA IA (faltaba esto)
   useEffect(() => {
     const fetchSkills = async () => {
       try {
@@ -44,57 +41,70 @@ export default function Dashboard() {
   return (
     <div id="pdf-content" className="min-h-screen bg-gray-100 p-8">
 
-      {/* Título */}
-      <h1 className="text-3xl font-bold mb-6">
-        Bienvenido {user?.nombre}
-      </h1>
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">
+          Bienvenido {user?.nombre} ({user?.role})
+        </h1>
 
+        <div className="flex gap-2">
           <button
             onClick={() => {
               localStorage.clear();
               window.location.reload();
             }}
-            className="mb-4 bg-red-500 text-white px-4 py-2 rounded"
+            className="bg-red-500 text-white px-4 py-2 rounded"
           >
             Cerrar sesión
           </button>
 
-            <button
-              onClick={generatePDF}
-              className="mb-4 bg-blue-600 text-white px-4 py-2 rounded"
-            >
-              Descargar PDF
-            </button>
-
-      {/* Grid principal */}
-      <div className="grid grid-cols-3 gap-6">
-
-        {/* Perfil */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="font-semibold mb-2">Perfil Profesional</h3>
-          <p className="text-gray-600">
-            Estudiante en formación con habilidades en desarrollo y trabajo en equipo.
-          </p>
+          <button
+            onClick={generatePDF}
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Descargar PDF
+          </button>
         </div>
+      </div>
 
-        {/* Habilidades */}
+      {/* PERFIL PROFESIONAL */}
+      <div className="bg-white p-6 rounded-xl shadow mb-6">
+        <h2 className="text-xl font-semibold mb-2">Perfil Profesional</h2>
+        <p className="text-gray-600">
+          Estudiante en formación con habilidades en desarrollo, trabajo en equipo y pensamiento crítico.
+          Interesado en el crecimiento profesional y la mejora continua.
+        </p>
+      </div>
+
+      {/* GRID */}
+      <div className="grid grid-cols-2 gap-6">
+
+        {/* HABILIDADES */}
         <div className="bg-white p-6 rounded-xl shadow">
-          <h3 className="font-semibold mb-2">Habilidades</h3>
-          <ul className="text-gray-600">
+          <h3 className="font-semibold mb-3">Habilidades</h3>
+          <ul className="text-gray-600 space-y-2">
             <li>✔ Comunicación</li>
             <li>✔ Liderazgo</li>
+            <li>✔ Trabajo en equipo</li>
+            <li>✔ Creatividad</li>
             <li>✔ Resolución de problemas</li>
           </ul>
         </div>
 
-        {/* Radar */}
-        <div className="bg-white p-6 rounded-xl shadow flex justify-center items-center">
-          <RadarChartComponent />
+        {/* RADAR */}
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="font-semibold mb-3 text-center">
+            Mapa de Competencias
+          </h3>
+
+          <div className="w-full h-[400px] flex justify-center items-center">
+            <RadarChartComponent />
+          </div>
         </div>
 
       </div>
 
-      {/* 🔥 NUEVA SECCIÓN IA */}
+      {/* ANÁLISIS IA */}
       {analysis && (
         <div className="mt-6 bg-white p-6 rounded-xl shadow">
           <h3 className="font-semibold mb-4">🧠 Análisis Inteligente</h3>
@@ -106,6 +116,31 @@ export default function Dashboard() {
           <p>Resolución: <b>{analysis.resolucion}</b></p>
         </div>
       )}
+
+      {/* NUEVOS MÓDULOS */}
+      <div className="grid grid-cols-2 gap-6 mt-6">
+
+        {/* PROYECTOS */}
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="font-semibold mb-3">🚀 Proyectos recomendados</h3>
+          <ul className="text-gray-600 space-y-2">
+            <li>• Sistema web de gestión académica</li>
+            <li>• App móvil de seguimiento de hábitos</li>
+            <li>• Plataforma de análisis de datos</li>
+          </ul>
+        </div>
+
+        {/* OPORTUNIDADES */}
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="font-semibold mb-3">🌟 Oportunidades destacadas</h3>
+          <ul className="text-gray-600 space-y-2">
+            <li>• Convocatoria prácticas profesionales</li>
+            <li>• Curso avanzado en desarrollo web</li>
+            <li>• Hackathon universitario</li>
+          </ul>
+        </div>
+
+      </div>
 
     </div>
   );
