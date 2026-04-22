@@ -22,14 +22,29 @@ export default function Dashboard() {
   const [assignments, setAssignments] = useState([]);
 
     useEffect(() => {
-      const fetchAssignments = async () => {
-        const res = await axios.get(
-          `https://proyecto-identidad-profesional.onrender.com/api/assignments/${user._id}`
-        );
-        setAssignments(res.data);
+      const fetchData = async () => {
+        try {
+          // 🔹 habilidades
+          const skillsRes = await axios.get(
+            `https://proyecto-identidad-profesional.onrender.com/api/skills/${user._id}`
+          );
+
+          const result = analyzeSkills(skillsRes.data || {});
+          setAnalysis(result);
+
+          // 🔹 asignaciones
+          const assignRes = await axios.get(
+            `https://proyecto-identidad-profesional.onrender.com/api/assignments/${user._id}`
+          );
+
+          setAssignments(assignRes.data);
+
+        } catch (error) {
+          console.log("Error cargando datos", error);
+        }
       };
 
-      fetchAssignments();
+      fetchData();
     }, []);
 
     return (
