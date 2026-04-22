@@ -24,27 +24,28 @@ export default function Dashboard() {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          // 🔹 habilidades
           const skillsRes = await axios.get(
             `https://proyecto-identidad-profesional.onrender.com/api/skills/${user._id}`
           );
 
-          const result = analyzeSkills(skillsRes.data || {});
-          setAnalysis(result);
+          setAnalysis(analyzeSkills(skillsRes.data || {}));
 
-          // 🔹 asignaciones
           const assignRes = await axios.get(
             `https://proyecto-identidad-profesional.onrender.com/api/assignments/${user._id}`
           );
 
           setAssignments(assignRes.data);
-
-        } catch (error) {
-          console.log("Error cargando datos", error);
+        } catch (e) {
+          console.log(e);
         }
       };
 
       fetchData();
+
+      // 🔥 AUTO ACTUALIZACIÓN DEL MAPA
+      const interval = setInterval(fetchData, 5000);
+
+      return () => clearInterval(interval);
     }, []);
 
     return (
