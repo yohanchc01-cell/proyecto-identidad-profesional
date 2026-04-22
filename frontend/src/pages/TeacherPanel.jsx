@@ -19,7 +19,7 @@ const [editUser, setEditUser] = useState(null);
   // 🔥 Obtener estudiantes
   useEffect(() => {
     const fetchStudents = async () => {
-      const res = await axios.get("http://localhost:3000/api/auth/students");
+      const res = await axios.get("https://proyecto-identidad-profesional.onrender.com/api/auth/students");
       setStudents(res.data);
     };
 
@@ -33,7 +33,7 @@ const [editUser, setEditUser] = useState(null);
       return;
     }
 
-    await axios.post("http://localhost:3000/api/skills", {
+    await axios.post("https://proyecto-identidad-profesional.onrender.com/api/skills", {
       userId: selected._id,
       comunicacion: Number(form.comunicacion),
       liderazgo: Number(form.liderazgo),
@@ -84,7 +84,7 @@ const [editUser, setEditUser] = useState(null);
                     <div className="flex gap-2 mt-1">
                     <button
                         onClick={async () => {
-                        await axios.delete(`http://localhost:3000/api/auth/user/${s._id}`);
+                        await axios.delete(`https://proyecto-identidad-profesional.onrender.com/api/auth/user/${s._id}`);
                         alert("Eliminado ✅");
                         window.location.reload();
                         }}
@@ -181,7 +181,7 @@ const [editUser, setEditUser] = useState(null);
                 <button
                 onClick={async () => {
                     await axios.put(
-                    `http://localhost:3000/api/auth/user/${editUser._id}`,
+                    `https://proyecto-identidad-profesional.onrender.com/api/auth/user/${editUser._id}`,
                     editUser
                     );
                     alert("Actualizado ✅");

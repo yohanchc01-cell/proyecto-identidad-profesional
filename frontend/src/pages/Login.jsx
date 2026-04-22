@@ -15,11 +15,11 @@ export default function Login() {
   const handleSubmit = async () => {
     try {
       if (isRegister) {
-        await axios.post("http://localhost:3000/api/auth/register", form);
+        await axios.post("https://proyecto-identidad-profesional.onrender.com/api/auth/register", form);
         alert("Usuario registrado ✅");
         setIsRegister(false);
       } else {
-        const res = await axios.post("http://localhost:3000/api/auth/login", {
+        const res = await axios.post("https://proyecto-identidad-profesional.onrender.com/api/auth/login", {
           email: form.email,
           password: form.password
         });

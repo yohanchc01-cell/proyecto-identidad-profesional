@@ -28,7 +28,7 @@ export default function Dashboard() {
     const fetchSkills = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/skills/${user._id}`
+          `https://proyecto-identidad-profesional.onrender.com/api/skills/${user._id}`
         );
 
         const result = analyzeSkills(res.data || {});

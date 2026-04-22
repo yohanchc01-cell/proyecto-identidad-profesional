@@ -17,7 +17,7 @@ export default function RadarChartComponent() {
       const user = JSON.parse(localStorage.getItem("user"));
 
       const res = await axios.get(
-        `http://localhost:3000/api/skills/${user._id}`
+        `https://proyecto-identidad-profesional.onrender.com/api/skills/${user._id}`
       );
 
       const skills = res.data;
