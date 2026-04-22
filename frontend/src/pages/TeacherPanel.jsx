@@ -20,17 +20,7 @@ export default function TeacherPanel() {
 
   const [selectedStudentView, setSelectedStudentView] = useState(null);
 
-  // 🔥 NUEVO: habilidades
-  const [selectedStudentSkills, setSelectedStudentSkills] = useState(null);
-
-  const [skillsForm, setSkillsForm] = useState({
-    comunicacion: 0,
-    liderazgo: 0,
-    trabajoEquipo: 0,
-    creatividad: 0,
-    resolucion: 0
-  });
-
+  // 🔥 cargar datos
   useEffect(() => {
     fetchStudents();
     fetchAssignments();
@@ -46,11 +36,13 @@ export default function TeacherPanel() {
     setAssignments(res.data);
   };
 
+  // 🔹 eliminar estudiante
   const deleteStudent = async (id) => {
     await axios.delete(`https://proyecto-identidad-profesional.onrender.com/api/auth/${id}`);
     fetchStudents();
   };
 
+  // 🔹 crear proyecto/oportunidad
   const createAssignment = async () => {
     await axios.post("https://proyecto-identidad-profesional.onrender.com/api/assignments", {
       ...form,
@@ -60,11 +52,13 @@ export default function TeacherPanel() {
     fetchAssignments();
   };
 
+  // 🔹 eliminar assignment
   const deleteAssignment = async (id) => {
     await axios.delete(`https://proyecto-identidad-profesional.onrender.com/api/assignments/${id}`);
     fetchAssignments();
   };
 
+  // 🔹 asignar
   const assign = async () => {
     await axios.put(
       `https://proyecto-identidad-profesional.onrender.com/api/assignments/${selectedAssignment}`,
@@ -76,16 +70,6 @@ export default function TeacherPanel() {
     );
 
     alert("Asignado correctamente ✅");
-  };
-
-  // 🔥 NUEVO: guardar habilidades
-  const saveSkills = async () => {
-    await axios.put(
-      `https://proyecto-identidad-profesional.onrender.com/api/skills/${selectedStudentSkills._id}`,
-      skillsForm
-    );
-
-    alert("Habilidades actualizadas ✅");
   };
 
   return (
@@ -108,20 +92,20 @@ export default function TeacherPanel() {
 
       {/* MENU */}
       <div className="flex gap-4 mb-6">
-        <button onClick={() => setView("students")}>Editar estudiantes</button>
-        <button onClick={() => setView("skills")}>Valorar habilidades</button>
-        <button onClick={() => setView("projects")}>Proyectos / Oportunidades</button>
-        <button onClick={() => setView("assign")}>Asignar</button>
-        <button onClick={() => setView("view")}>Ver estudiante</button>
+        <button onClick={() => setView("students")} className="bg-gray-200 px-4 py-2 rounded">Editar estudiantes</button>
+        <button onClick={() => setView("projects")} className="bg-gray-200 px-4 py-2 rounded">Proyectos / Oportunidades</button>
+        <button onClick={() => setView("assign")} className="bg-gray-200 px-4 py-2 rounded">Asignar</button>
+        <button onClick={() => setView("view")} className="bg-gray-200 px-4 py-2 rounded">Ver estudiante</button>
       </div>
 
       {/* ===================== 1. EDITAR ESTUDIANTES ===================== */}
       {view === "students" && (
         <div>
-          <h2>Editar estudiantes</h2>
+          <h2 className="text-2xl mb-4">Editar estudiantes</h2>
 
           {students.map(s => (
-            <div key={s._id} className="p-3 border mb-2 flex justify-between">
+            <div key={s._id} className="bg-white p-4 mb-3 rounded shadow flex justify-between">
+
               <div>
                 <p><b>{s.nombre}</b></p>
                 <p>{s.email}</p>
@@ -133,85 +117,117 @@ export default function TeacherPanel() {
               >
                 Eliminar
               </button>
+
             </div>
           ))}
         </div>
       )}
 
-      {/* ===================== 2. NUEVO: VALORAR HABILIDADES ===================== */}
-      {view === "skills" && (
+      {/* ===================== 2. PROYECTOS ===================== */}
+      {view === "projects" && (
         <div>
-          <h2 className="text-2xl mb-4">Valorar habilidades (0 - 100)</h2>
+          <h2 className="text-2xl mb-4">Proyectos / Oportunidades</h2>
+
+          <input placeholder="Título"
+            className="border p-2 w-full mb-2"
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
+          />
+
+          <input placeholder="Descripción"
+            className="border p-2 w-full mb-2"
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
 
           <select
-            className="border p-2 mb-4"
-            onChange={(e) => {
-              const student = students.find(s => s._id === e.target.value);
-              setSelectedStudentSkills(student);
-            }}
+            className="border p-2 w-full mb-2"
+            onChange={(e) => setForm({ ...form, type: e.target.value })}
           >
-            <option>Selecciona estudiante</option>
-            {students.map(s => (
-              <option key={s._id} value={s._id}>
-                {s.nombre}
+            <option value="proyecto">Proyecto</option>
+            <option value="oportunidad">Oportunidad</option>
+          </select>
+
+          <button
+            onClick={createAssignment}
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Crear
+          </button>
+
+          <div className="mt-4">
+            {assignments.map(a => (
+              <div key={a._id} className="bg-white p-3 mb-2 rounded shadow flex justify-between">
+                <div>
+                  <b>{a.title}</b>
+                  <p>{a.type}</p>
+                </div>
+
+                <button
+                  onClick={() => deleteAssignment(a._id)}
+                  className="bg-red-500 text-white px-2 py-1 rounded"
+                >
+                  Eliminar
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===================== 3. ASIGNAR ===================== */}
+      {view === "assign" && (
+        <div>
+          <h2 className="text-2xl mb-4">Asignar</h2>
+
+          <select
+            className="border p-2 w-full mb-3"
+            onChange={(e) => setSelectedAssignment(e.target.value)}
+          >
+            <option>Selecciona proyecto u oportunidad</option>
+            {assignments.map(a => (
+              <option key={a._id} value={a._id}>
+                {a.title} ({a.type})
               </option>
             ))}
           </select>
 
-          {selectedStudentSkills && (
-            <div className="bg-white p-4 shadow rounded">
+          <h3 className="mb-2">Estudiantes</h3>
 
-              {Object.keys(skillsForm).map(key => (
-                <div key={key} className="mb-3">
-                  <label className="block capitalize">{key}</label>
+          {students.map(s => (
+            <label key={s._id} className="block">
+              <input
+                type="checkbox"
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedStudents([...selectedStudents, s]);
+                  } else {
+                    setSelectedStudents(
+                      selectedStudents.filter(st => st._id !== s._id)
+                    );
+                  }
+                }}
+              />
+              <span className="ml-2">{s.nombre}</span>
+            </label>
+          ))}
 
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={skillsForm[key]}
-                    onChange={(e) =>
-                      setSkillsForm({
-                        ...skillsForm,
-                        [key]: Number(e.target.value)
-                      })
-                    }
-                  />
+          <label className="block mt-3">
+            <input type="checkbox" onChange={(e) => setAssignAll(e.target.checked)} />
+            <span className="ml-2">Asignar a todos</span>
+          </label>
 
-                  <span>{skillsForm[key]}</span>
-                </div>
-              ))}
-
-              <button
-                onClick={saveSkills}
-                className="bg-green-600 text-white px-4 py-2 rounded"
-              >
-                Guardar habilidades
-              </button>
-
-            </div>
-          )}
+          <button
+            onClick={assign}
+            className="bg-green-600 text-white px-4 py-2 mt-3 rounded"
+          >
+            Asignar
+          </button>
         </div>
       )}
 
-      {/* ===================== 3. PROYECTOS ===================== */}
-      {view === "projects" && (
-        <div>
-          <h2>Proyectos / Oportunidades</h2>
-        </div>
-      )}
-
-      {/* ===================== 4. ASIGNAR ===================== */}
-      {view === "assign" && (
-        <div>
-          <h2>Asignar</h2>
-        </div>
-      )}
-
-      {/* ===================== 5. VER ESTUDIANTE ===================== */}
+      {/* ===================== 4. VER ESTUDIANTE ===================== */}
       {view === "view" && (
         <div>
-          <h2>Ver estudiante</h2>
+          <h2 className="text-2xl mb-4">Ver estudiante</h2>
 
           {students.map(s => (
             <button
@@ -224,9 +240,10 @@ export default function TeacherPanel() {
           ))}
 
           {selectedStudentView && (
-            <div className="mt-4 p-4 bg-white shadow">
-              <h3>{selectedStudentView.nombre}</h3>
+            <div className="mt-4 p-4 bg-white rounded shadow">
+              <h3 className="text-xl">{selectedStudentView.nombre}</h3>
               <p>{selectedStudentView.email}</p>
+              <p>Rol: {selectedStudentView.role}</p>
             </div>
           )}
         </div>
@@ -235,3 +252,4 @@ export default function TeacherPanel() {
     </div>
   );
 }
+
