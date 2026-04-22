@@ -94,7 +94,7 @@ export default function TeacherPanel() {
       <div className="flex gap-4 mb-6">
         <button onClick={() => setView("students")} className="bg-gray-200 px-4 py-2 rounded">Editar estudiantes</button>
         <button onClick={() => setView("projects")} className="bg-gray-200 px-4 py-2 rounded">Proyectos / Oportunidades</button>
-        <button onClick={() => setView("assign")} className="bg-gray-200 px-4 py-2 rounded">Asignar</button>
+        <button onClick={() => setView("assign")} className="bg-gray-200 px-4 py-2 rounded">Asignar Proyecto/Oportunidad</button>
         <button onClick={() => setView("view")} className="bg-gray-200 px-4 py-2 rounded">Ver estudiante</button>
       </div>
 
