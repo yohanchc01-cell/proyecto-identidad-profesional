@@ -19,20 +19,18 @@ export default function Dashboard() {
     pdf.save("perfil_profesional.pdf");
   };
 
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const res = await axios.get(
-          `https://proyecto-identidad-profesional.onrender.com/api/skills/${user._id}`
-        );
-        setAnalysis(analyzeSkills(res.data || {}));
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const [assignments, setAssignments] = useState([]);
 
-    fetchSkills();
-  }, []);
+    useEffect(() => {
+      const fetchAssignments = async () => {
+        const res = await axios.get(
+          `https://proyecto-identidad-profesional.onrender.com/api/assignments/${user._id}`
+        );
+        setAssignments(res.data);
+      };
+
+      fetchAssignments();
+    }, []);
 
     return (
     <div id="pdf-content" className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-50 p-6">
@@ -129,27 +127,20 @@ export default function Dashboard() {
       {/* EXTRA */}
       <div className="grid md:grid-cols-2 gap-6 mt-6">
 
-        <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <h3 className="font-semibold mb-3 text-green-600">
-            🚀 Proyectos Destacados
-          </h3>
-          <ul className="space-y-2 text-gray-600">
-            <li>• Diseño e implementación de un programa de actividad física para mejorar la salud en comunidades escolares.</li>
-            <li>• Organización de eventos deportivos comunitarios para fomentar la inclusión y el trabajo en equipo</li>
-            <li>• Creación de una escuela deportiva enfocada en el desarrollo de habilidades básicas en niños</li>
-          </ul>
+        <div className="bg-white p-6 rounded shadow">
+          <h3>Proyectos asignados</h3>
+
+          {assignments.filter(a => a.type === "proyecto").map(a => (
+            <p key={a._id}>• {a.title}</p>
+          ))}
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <h3 className="font-semibold mb-3 text-yellow-600">
-            🌟 Oportunidades Recomendadas
-          </h3>
-          <ul className="space-y-2 text-gray-600">
-            <li>• Participación en ligas deportivas locales y programas de entrenamiento</li>
-            <li>• Cursos y certificaciones en entrenamiento deportivo, recreación y actividad física</li>
-            <li>• Participación en eventos académicos y deportivos como congresos, seminarios y torneos</li>
-            <li>• Convocatorias para proyectos sociales enfocados en deporte y salud</li>
-          </ul>
+        <div className="bg-white p-6 rounded shadow">
+          <h3>Oportunidades asignadas</h3>
+
+          {assignments.filter(a => a.type === "oportunidad").map(a => (
+            <p key={a._id}>• {a.title}</p>
+          ))}
         </div>
 
       </div>

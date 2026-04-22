@@ -4,52 +4,65 @@ import axios from "axios";
 export default function TeacherPanel() {
 
   const [students, setStudents] = useState([]);
-  const [selected, setSelected] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-const [editUser, setEditUser] = useState(null);
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [assignAll, setAssignAll] = useState(false);
 
-  const [form, setForm] = useState({
-    comunicacion: "",
-    liderazgo: "",
-    trabajoEquipo: "",
-    creatividad: "",
-    resolucion: ""
+  const [assignment, setAssignment] = useState({
+    title: "",
+    description: "",
+    type: "proyecto"
   });
 
-  // 🔥 Obtener estudiantes
+  const [allAssignments, setAllAssignments] = useState([]);
+  const [editing, setEditing] = useState(null);
+
+  const [viewStudent, setViewStudent] = useState(null);
+
+  // 🔥 traer estudiantes
   useEffect(() => {
     const fetchStudents = async () => {
       const res = await axios.get("https://proyecto-identidad-profesional.onrender.com/api/auth/students");
       setStudents(res.data);
     };
 
+    const fetchAssignments = async () => {
+      const res = await axios.get("https://proyecto-identidad-profesional.onrender.com/api/assignments");
+      setAllAssignments(res.data);
+    };
+
     fetchStudents();
+    fetchAssignments();
   }, []);
 
-  // 🔥 Guardar evaluación
+  // 🔥 guardar / editar
   const handleSubmit = async () => {
-    if (!selected) {
-      alert("Selecciona un estudiante ❌");
-      return;
+
+    if (editing) {
+      await axios.put(
+        `https://proyecto-identidad-profesional.onrender.com/api/assignments/${editing._id}`,
+        assignment
+      );
+      alert("Actualizado ✅");
+    } else {
+      await axios.post(
+        "https://proyecto-identidad-profesional.onrender.com/api/assignments",
+        {
+          ...assignment,
+          userIds: selectedStudents.map(s => s._id),
+          assignToAll: assignAll
+        }
+      );
+      alert("Asignado ✅");
     }
 
-    await axios.post("https://proyecto-identidad-profesional.onrender.com/api/skills", {
-      userId: selected._id,
-      comunicacion: Number(form.comunicacion),
-      liderazgo: Number(form.liderazgo),
-      trabajoEquipo: Number(form.trabajoEquipo),
-      creatividad: Number(form.creatividad),
-      resolucion: Number(form.resolucion)
-    });
-
-    alert("Evaluación guardada ✅");
+    window.location.reload();
   };
 
   return (
-    <div className="p-8">
+    <div className="p-6">
 
-      {/* 🔥 HEADER CON LOGOUT */}
-      <div className="flex justify-between items-center mb-6">
+      {/* HEADER */}
+      <div className="flex justify-between mb-6">
         <h1 className="text-2xl font-bold">Panel Docente</h1>
 
         <button
@@ -57,153 +70,119 @@ const [editUser, setEditUser] = useState(null);
             localStorage.clear();
             window.location.reload();
           }}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+          className="bg-red-500 text-white px-4 py-2 rounded"
         >
           Cerrar sesión
         </button>
       </div>
 
-      {/* CONTENIDO */}
-      <div className="grid grid-cols-2 gap-6">
+      {/* FORM */}
+      <div className="bg-white p-6 rounded shadow mb-6">
 
-        {/* Lista estudiantes */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h2 className="text-xl mb-4">Estudiantes</h2>
+        <h2 className="mb-4 font-semibold">Crear asignación</h2>
 
-          {students.map((s) => (
-                <div
-                    key={s._id}
-                    className={`p-2 rounded ${
-                    selected?._id === s._id ? "bg-blue-200" : "hover:bg-gray-100"
-                    }`}
-                >
-                    <div onClick={() => setSelected(s)} className="cursor-pointer">
-                    {s.nombre} ({s.email})
-                    </div>
+        <input placeholder="Título"
+          onChange={(e) => setAssignment({ ...assignment, title: e.target.value })}
+        /><br/><br/>
 
-                    <div className="flex gap-2 mt-1">
-                    <button
-                        onClick={async () => {
-                        await axios.delete(`https://proyecto-identidad-profesional.onrender.com/api/auth/user/${s._id}`);
-                        alert("Eliminado ✅");
-                        window.location.reload();
-                        }}
-                        className="text-red-600 text-sm"
-                    >
-                        Eliminar
-                    </button>
+        <input placeholder="Descripción"
+          onChange={(e) => setAssignment({ ...assignment, description: e.target.value })}
+        /><br/><br/>
 
-                    <button
-                        onClick={() => {
-                            setEditMode(true);
-                            setEditUser(s);
-                        }}
-                        className="text-blue-600 text-sm"
-                        >
-                        Editar
-                        </button>
+        <select onChange={(e) => setAssignment({ ...assignment, type: e.target.value })}>
+          <option value="proyecto">Proyecto</option>
+          <option value="oportunidad">Oportunidad</option>
+        </select>
 
-                    </div>
-                </div>
-                ))}
-        </div>
+        <br/><br/>
 
-        {/* Formulario */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h2 className="text-xl mb-4">
-            Evaluar: {selected ? selected.nombre : "Ninguno"}
-          </h2>
+        <label>
+          <input type="checkbox" onChange={(e) => setAssignAll(e.target.checked)} />
+          Asignar a todos
+        </label>
 
-          <input placeholder="Comunicación"
-            onChange={(e) => setForm({ ...form, comunicacion: e.target.value })}
-          /><br/><br/>
+        <br/><br/>
 
-          <input placeholder="Liderazgo"
-            onChange={(e) => setForm({ ...form, liderazgo: e.target.value })}
-          /><br/><br/>
-
-          <input placeholder="Trabajo en equipo"
-            onChange={(e) => setForm({ ...form, trabajoEquipo: e.target.value })}
-          /><br/><br/>
-
-          <input placeholder="Creatividad"
-            onChange={(e) => setForm({ ...form, creatividad: e.target.value })}
-          /><br/><br/>
-
-          <input placeholder="Resolución"
-            onChange={(e) => setForm({ ...form, resolucion: e.target.value })}
-          /><br/><br/>
-
-          <button
-            onClick={handleSubmit}
-            className="bg-green-600 text-white px-4 py-2 rounded"
-          >
-            Guardar evaluación
-          </button>
-        </div>
+        <button onClick={handleSubmit}
+          className="bg-blue-600 text-white px-4 py-2 rounded">
+          {editing ? "Actualizar" : "Asignar"}
+        </button>
 
       </div>
 
-            {editMode && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+      {/* LISTADO */}
+      <h2 className="text-xl mb-4">Gestión</h2>
 
-            <div className="bg-white p-6 rounded shadow w-96">
-            <h2 className="text-xl mb-4">Editar Usuario</h2>
+      {allAssignments.map((a) => (
+        <div key={a._id} className="bg-white p-4 mb-4 rounded shadow">
 
-            <input
-                value={editUser?.nombre}
-                onChange={(e) =>
-                setEditUser({ ...editUser, nombre: e.target.value })
-                }
-                className="border p-2 w-full mb-2"
-            />
+          <h3 className="font-bold">{a.title}</h3>
+          <p>{a.description}</p>
 
-            <input
-                value={editUser?.email}
-                onChange={(e) =>
-                setEditUser({ ...editUser, email: e.target.value })
-                }
-                className="border p-2 w-full mb-2"
-            />
+          <p className="text-blue-600">{a.type}</p>
 
-            <select
-                value={editUser?.role}
-                onChange={(e) =>
-                setEditUser({ ...editUser, role: e.target.value })
-                }
-                className="border p-2 w-full mb-2"
+          <p>
+            {a.assignedTo.map(u => (
+              <span key={u._id}> {u.nombre}, </span>
+            ))}
+          </p>
+
+          <div className="flex gap-2 mt-2">
+
+            <button
+              onClick={() => {
+                setEditing(a);
+                setAssignment(a);
+              }}
+              className="bg-yellow-500 text-white px-3 py-1 rounded"
             >
-                <option value="estudiante">Estudiante</option>
-                <option value="docente">Docente</option>
-            </select>
+              Editar
+            </button>
 
-            <div className="flex justify-between mt-4">
-                <button
-                onClick={async () => {
-                    await axios.put(
-                    `https://proyecto-identidad-profesional.onrender.com/api/auth/user/${editUser._id}`,
-                    editUser
-                    );
-                    alert("Actualizado ✅");
-                    setEditMode(false);
-                    window.location.reload();
-                }}
-                className="bg-green-600 text-white px-4 py-2 rounded"
-                >
-                Guardar
-                </button>
+            <button
+              onClick={async () => {
+                await axios.delete(`https://proyecto-identidad-profesional.onrender.com/api/assignments/${a._id}`);
+                window.location.reload();
+              }}
+              className="bg-red-600 text-white px-3 py-1 rounded"
+            >
+              Eliminar
+            </button>
 
-                <button
-                onClick={() => setEditMode(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded"
-                >
-                Cancelar
-                </button>
-            </div>
-            </div>
+          </div>
 
         </div>
-        )}
+      ))}
+
+      {/* VER COMO ESTUDIANTE */}
+      <h2 className="text-xl mt-6">Ver como estudiante</h2>
+
+      {students.map(s => (
+        <button
+          key={s._id}
+          onClick={() => setViewStudent(s)}
+          className="block border p-2 mt-2"
+        >
+          {s.nombre}
+        </button>
+      ))}
+
+      {viewStudent && (
+        <div className="mt-4 p-4 bg-gray-100">
+          <h3>Vista de {viewStudent.nombre}</h3>
+
+          <button
+            onClick={() => {
+              localStorage.setItem("user", JSON.stringify(viewStudent));
+              window.location.reload();
+            }}
+            className="bg-green-600 text-white px-4 py-2 mt-2"
+          >
+            Entrar como este estudiante
+          </button>
+        </div>
+      )}
+
     </div>
   );
 }
