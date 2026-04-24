@@ -103,13 +103,13 @@ export default function Dashboard() {
   };
 
   // 🔥 RADAR DINÁMICO
-  const radarData = [
-    { subject: "comunicacion", value: 0 },
-    { subject: "liderazgo", value: 0 },
-    { subject: "trabajoequipo", value: 0 },
-    { subject: "creatividad", value: 0 },
-    { subject: "resolucion", value: 0 }
-  ];
+  const skillsMap = {
+    comunicacion: [],
+    liderazgo: [],
+    trabajoEquipo: [],
+    creatividad: [],
+    resolucion: []
+  };
 
   activities.forEach(a => {
     if (!a.habilidades) return;
@@ -120,17 +120,23 @@ export default function Dashboard() {
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s/g, "") // quita espacios
+        .replace(/\s/g, "")
         .replace("trabajoenequipo", "trabajoequipo")
+        .replace("trabajoequipo", "trabajoEquipo")
         .replace("resolucionconflictos", "resolucion");
 
-      const item = radarData.find(r => r.subject === key);
-
-      if (item) {
-        item.value += Number(a.calificacion || 0);
+      if (skillsMap[key]) {
+        skillsMap[key].push(Number(a.calificacion || 0));
       }
     });
   });
+
+const radarData = Object.keys(skillsMap).map(k => ({
+  subject: k,
+  value: skillsMap[k].length
+    ? skillsMap[k].reduce((a, b) => a + b, 0) / skillsMap[k].length
+    : 0
+}));
 
   
   return (
