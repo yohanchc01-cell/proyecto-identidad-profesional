@@ -41,12 +41,14 @@ export default function Dashboard() {
   };
 
   const createCourse = async () => {
-    if (!newCourse) return alert("Escribe un nombre");
+    if (!newCourse || newCourse.trim() === "") {
+      return alert("El nombre del curso es obligatorio ❌");
+    }
 
     await axios.post(
       "https://proyecto-identidad-profesional.onrender.com/api/courses",
       {
-        nombre: newCourse,
+        nombre: newCourse.trim(),
         userId: user._id
       }
     );
@@ -147,15 +149,17 @@ export default function Dashboard() {
 
             {/* TARJETAS */}
             <div className="grid gap-3">
-              {courses.map(c => (
-                <div
-                  key={c._id}
-                  onClick={() => navigate(`/course/${c._id}`)}
-                  className="p-4 border rounded cursor-pointer hover:bg-blue-50"
-                >
-                  {c.nombre}
-                </div>
-              ))}
+              {courses
+                .filter(c => c.nombre && c.nombre.trim() !== "")
+                .map(c => (
+                  <div
+                    key={c._id}
+                    onClick={() => navigate(`/course/${c._id}`)}
+                    className="p-4 border rounded cursor-pointer hover:bg-blue-50"
+                  >
+                    {c.nombre}
+                  </div>
+                ))}
             </div>
 
           </div>
