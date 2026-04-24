@@ -11,6 +11,15 @@ export default function Dashboard() {
   const [courses, setCourses] = useState([]);
   const [newCourse, setNewCourse] = useState("");
 
+  // 🔹 Radar vacío (luego lo conectamos dinámico)
+  const radarData = [
+    { subject: "Comunicación", value: 0 },
+    { subject: "Liderazgo", value: 0 },
+    { subject: "Trabajo en equipo", value: 0 },
+    { subject: "Creatividad", value: 0 },
+    { subject: "Resolución", value: 0 }
+  ];
+
   useEffect(() => {
     fetchCourses();
   }, []);
@@ -46,26 +55,37 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-100 p-8">
 
       {/* HEADER */}
-      <div className="flex justify-between mb-6">
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">
           Bienvenido {user?.nombre}
         </h1>
 
         <button
           onClick={logout}
-          className="bg-red-500 text-white px-4 py-2 rounded"
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
         >
           Cerrar sesión
         </button>
       </div>
 
-      {/* PERFIL */}
-      <div className="bg-white p-6 rounded-xl shadow mb-6">
-        <h3 className="font-semibold mb-2">Perfil Profesional</h3>
-        <p className="text-gray-600">
-          Estudiante de licenciatura en educación física y deporte,
-          con habilidades en liderazgo, trabajo en equipo y desarrollo integral.
-        </p>
+      {/* PERFIL + RADAR */}
+      <div className="grid grid-cols-2 gap-6 mb-6">
+
+        {/* PERFIL */}
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="font-semibold mb-2">Perfil Profesional</h3>
+          <p className="text-gray-600">
+            Estudiante de licenciatura en educación física y deporte,
+            con habilidades en liderazgo, trabajo en equipo y desarrollo integral.
+          </p>
+        </div>
+
+        {/* RADAR */}
+        <div className="bg-white p-6 rounded-xl shadow">
+          <h3 className="font-semibold mb-2">Mapa de Competencias</h3>
+          <RadarChartComponent data={radarData} />
+        </div>
+
       </div>
 
       {/* CURSOS */}
@@ -73,6 +93,7 @@ export default function Dashboard() {
 
         <h2 className="text-xl font-semibold mb-4">Cursos</h2>
 
+        {/* CREAR CURSO */}
         <div className="flex gap-2 mb-4">
           <input
             placeholder="Nuevo curso"
@@ -89,16 +110,24 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* LISTA */}
-        {courses.map(c => (
-          <div
-            key={c._id}
-            onClick={() => navigate(`/course/${c._id}`)}
-            className="p-3 border mb-2 rounded cursor-pointer hover:bg-gray-100"
-          >
-            {c.nombre}
-          </div>
-        ))}
+        {/* CURSOS EN TARJETAS */}
+        <div className="grid grid-cols-3 gap-4">
+
+          {courses.map(c => (
+            <div
+              key={c._id}
+              onClick={() => navigate(`/course/${c._id}`)}
+              className="bg-gray-50 p-6 rounded-xl shadow cursor-pointer hover:bg-blue-50 transition border"
+            >
+              <h3 className="text-lg font-semibold">{c.nombre}</h3>
+
+              <p className="text-gray-500 mt-2">
+                Ver actividades →
+              </p>
+            </div>
+          ))}
+
+        </div>
 
       </div>
 
