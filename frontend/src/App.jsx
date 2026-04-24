@@ -1,18 +1,16 @@
-import { useState } from "react";
-import Login from "./pages/Login";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
-import TeacherPanel from "./pages/TeacherPanel";
+import CourseDetail from "./pages/CourseDetail";
 
 function App() {
-  const [user] = useState(
-    JSON.parse(localStorage.getItem("user"))
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/course/:id" element={<CourseDetail />} />
+      </Routes>
+    </BrowserRouter>
   );
-
-  if (!user) return <Login />;
-
-  if (user.role === "docente") return <TeacherPanel />;
-
-  return <Dashboard />;
 }
 
 export default App;
