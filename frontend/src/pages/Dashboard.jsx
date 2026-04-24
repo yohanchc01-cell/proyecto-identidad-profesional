@@ -21,20 +21,16 @@ export default function Dashboard() {
     habilidades: []
   });
 
-  // 🔹 Radar base
-  const radarData = [
-    { subject: "Comunicación", value: 0 },
-    { subject: "Liderazgo", value: 0 },
-    { subject: "TrabajoEquipo", value: 0 },
-    { subject: "Creatividad", value: 0 },
-    { subject: "ResoluciónConflictos", value: 0 }
-  ];
-
+  // 🔥 TRAER ACTIVIDADES
   const fetchActivities = async () => {
-    const res = await axios.get(
-      `https://proyecto-identidad-profesional.onrender.com/api/activities/user/${user._id}`
-    );
-    setActivities(res.data);
+    try {
+      const res = await axios.get(
+        `https://proyecto-identidad-profesional.onrender.com/api/activities/user/${user._id}`
+      );
+      setActivities(res.data);
+    } catch (error) {
+      console.log("Error actividades", error);
+    }
   };
 
   useEffect(() => {
@@ -96,12 +92,35 @@ export default function Dashboard() {
 
     setForm({ nombre: "", calificacion: "", habilidades: [] });
     setFile(null);
+
+    // 🔥 ACTUALIZA RADAR
+    fetchActivities();
   };
 
   const logout = () => {
     localStorage.clear();
     window.location.reload();
   };
+
+  // 🔥 RADAR DINÁMICO
+  const radarData = [
+    { subject: "comunicacion", value: 0 },
+    { subject: "liderazgo", value: 0 },
+    { subject: "trabajoEquipo", value: 0 },
+    { subject: "creatividad", value: 0 },
+    { subject: "resolucion", value: 0 }
+  ];
+
+  activities.forEach(a => {
+    if (!a.habilidades) return;
+
+    a.habilidades.forEach(h => {
+      const item = radarData.find(r => r.subject === h);
+      if (item) {
+        item.value += Number(a.calificacion || 0);
+      }
+    });
+  });
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -120,7 +139,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* GRID PRINCIPAL */}
+      {/* GRID */}
       <div className="grid grid-cols-2 gap-6">
 
         {/* IZQUIERDA */}
@@ -156,7 +175,6 @@ export default function Dashboard() {
               </button>
             </div>
 
-            {/* TARJETAS */}
             <div className="grid gap-3">
               {courses
                 .filter(c => c.nombre && c.nombre.trim() !== "")
@@ -213,7 +231,7 @@ export default function Dashboard() {
 
             {/* HABILIDADES */}
             <div className="mb-3">
-              {["Comunicación","Liderazgo","TrabajoEquipo","Creatividad","ResoluciónConflictos"].map(h=>(
+              {["comunicacion","liderazgo","trabajoEquipo","creatividad","resolucion"].map(h=>(
                 <label key={h} className="mr-3 text-sm">
                   <input
                     type="checkbox"
