@@ -13,6 +13,7 @@ export default function Dashboard() {
 
   const [selectedCourse, setSelectedCourse] = useState("");
   const [file, setFile] = useState(null);
+  const [activities, setActivities] = useState([]);
 
   const [form, setForm] = useState({
     nombre: "",
@@ -26,11 +27,19 @@ export default function Dashboard() {
     { subject: "Liderazgo", value: 0 },
     { subject: "TrabajoEquipo", value: 0 },
     { subject: "Creatividad", value: 0 },
-    { subject: "Resolución", value: 0 }
+    { subject: "ResoluciónConflictos", value: 0 }
   ];
+
+  const fetchActivities = async () => {
+    const res = await axios.get(
+      `https://proyecto-identidad-profesional.onrender.com/api/activities/user/${user._id}`
+    );
+    setActivities(res.data);
+  };
 
   useEffect(() => {
     fetchCourses();
+    fetchActivities();
   }, []);
 
   const fetchCourses = async () => {
