@@ -6,8 +6,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* 🔥 ESTA ES LA CLAVE */}
+        <Route path="/" element={<Dashboard />} />
+
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/course/:id" element={<CourseDetail />} />
+
       </Routes>
     </BrowserRouter>
   );
