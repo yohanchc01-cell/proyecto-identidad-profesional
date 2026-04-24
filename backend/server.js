@@ -9,6 +9,7 @@ const activityRoutes = require("./routes/activities");
 const uploadRoutes = require("./routes/upload");
 
 
+
 require("dotenv").config();
 
 const app = express();

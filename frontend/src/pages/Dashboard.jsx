@@ -122,8 +122,7 @@ export default function Dashboard() {
     });
   });
 
-  console.log("ACTIVITIES:", activities);
-
+  
   return (
     <div className="min-h-screen bg-gray-100 p-8">
 
