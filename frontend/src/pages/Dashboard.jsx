@@ -213,7 +213,7 @@ export default function Dashboard() {
 
             {/* HABILIDADES */}
             <div className="mb-3">
-              {["comunicacion","liderazgo","trabajoEquipo","creatividad","resolucion"].map(h=>(
+              {["Comunicación","Liderazgo","TrabajoEquipo","Creatividad","ResoluciónConflictos"].map(h=>(
                 <label key={h} className="mr-3 text-sm">
                   <input
                     type="checkbox"
