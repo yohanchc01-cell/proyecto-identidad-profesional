@@ -8,6 +8,7 @@ export default function CourseDetail() {
   const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
   const [courseName, setCourseName] = useState("Curso");
+  const [confirmDelete, setConfirmDelete] = useState({ id: null, seconds: 0 });
 
   const API_URL = "https://proyecto-identidad-profesional.onrender.com/api";
 
