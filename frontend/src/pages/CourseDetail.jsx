@@ -35,8 +35,22 @@ export default function CourseDetail() {
   };
 
   const deleteActivity = async (activityId) => {
-    if (!window.confirm("¿Eliminar esta evidencia?")) return;
+    if (confirmDelete.id !== activityId) {
+      setConfirmDelete({ id: activityId, seconds: 4 });
+      const timer = setInterval(() => {
+        setConfirmDelete(prev => {
+          if (prev.seconds <= 1) {
+            clearInterval(timer);
+            return { id: null, seconds: 0 };
+          }
+          return { ...prev, seconds: prev.seconds - 1 };
+        });
+      }, 1000);
+      return;
+    }
+    
     await axios.delete(`${API_URL}/activities/${activityId}`);
+    setConfirmDelete({ id: null, seconds: 0 });
     fetchActivities();
   };
 
@@ -87,9 +101,9 @@ export default function CourseDetail() {
 
               <button
                 onClick={() => deleteActivity(a._id)}
-                className="text-red-400 hover:text-red-600 font-bold text-sm transition-all"
+                className={`text-sm font-bold transition-all duration-300 ${confirmDelete.id === a._id ? 'bg-red-500 text-white px-4 py-2 rounded-xl shadow-lg scale-105' : 'text-red-400 hover:text-red-600'}`}
               >
-                Eliminar
+                {confirmDelete.id === a._id ? `¿Borrar? (${confirmDelete.seconds}s)` : 'Eliminar'}
               </button>
             </div>
           </div>
