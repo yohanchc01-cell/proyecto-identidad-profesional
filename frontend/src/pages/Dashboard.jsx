@@ -184,64 +184,6 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="grid grid-cols-1 gap-8 mb-10">
-        {/* Formulario Nueva Actividad */}
-        <div className="bg-white p-8 rounded-3xl shadow-soft no-print">
-          <h2 className="text-2xl font-bold mb-6">Registrar Actividad</h2>
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <input
-              placeholder="Nombre de la actividad"
-              className="bg-gray-50 border-none p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary"
-              value={form.nombre}
-              onChange={e => setForm({...form, nombre: e.target.value})}
-            />
-            <input
-              placeholder="Calificación (0-5)"
-              className="bg-gray-50 border-none p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary"
-              value={form.calificacion}
-              onChange={e => setForm({...form, calificacion: e.target.value})}
-            />
-          </div>
-          <select
-            className="w-full bg-gray-50 border-none p-4 rounded-2xl mb-4 outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
-            value={selectedCourse}
-            onChange={e => setSelectedCourse(e.target.value)}
-          >
-            <option value="">Seleccionar Curso</option>
-            {courses.map(c => <option key={c._id} value={c._id}>{c.nombre}</option>)}
-          </select>
-          
-          <div className="mb-6">
-            <p className="font-bold text-sm mb-3">Habilidades Evaluadas (1-3):</p>
-            <div className="flex flex-wrap gap-2">
-              {skillsList.map(s => (
-                <label key={s.id} className={`px-4 py-2 rounded-xl text-sm font-medium cursor-pointer transition-all border ${
-                  form.habilidades.includes(s.id) ? "bg-primary text-white border-primary" : "bg-white text-gray-500 border-gray-100 hover:bg-gray-50"
-                }`}>
-                  <input
-                    type="checkbox"
-                    className="hidden"
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        if (form.habilidades.length < 3) setForm({...form, habilidades: [...form.habilidades, s.id]});
-                        else { e.target.checked = false; alert("Máximo 3 habilidades"); }
-                      } else {
-                        setForm({...form, habilidades: form.habilidades.filter(h => h !== s.id)});
-                      }
-                    }}
-                  />
-                  {s.name}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <input type="file" onChange={e => setFile(e.target.files[0])} className="flex-1 text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-primary hover:file:bg-indigo-100 transition-all"/>
-            <button onClick={uploadActivity} className="bg-primary text-white px-10 py-4 rounded-2xl font-bold shadow-lg">Guardar Actividad</button>
-          </div>
-        </div>
-      </div>
     </Layout>
   );
 }
