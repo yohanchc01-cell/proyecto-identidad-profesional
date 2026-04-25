@@ -108,6 +108,13 @@ export default function Dashboard() {
 
   const colors = ["bg-folder-red", "bg-folder-blue", "bg-folder-orange", "bg-folder-green"];
 
+  const getCourseAverage = (courseId) => {
+    const courseActivities = activities.filter(a => a.cursoId === courseId);
+    if (courseActivities.length === 0) return "S/N"; // Sin notas
+    const sum = courseActivities.reduce((acc, curr) => acc + Number(curr.calificacion || 0), 0);
+    return (sum / courseActivities.length).toFixed(1);
+  };
+
   return (
     <Layout>
       {/* Welcome Section */}
@@ -158,8 +165,13 @@ export default function Dashboard() {
               onClick={() => navigate(`/course/${course._id}`)}
               className={`${colors[idx % colors.length]} p-6 rounded-3xl text-white h-48 flex flex-col justify-between shadow-medium cursor-pointer hover:scale-[1.02] transition-all`}
             >
-              <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center text-xl">
-                {["🏀", "⚽", "🧠", "🚑"][idx % 4]}
+              <div className="flex justify-between items-start">
+                <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center text-xl">
+                  {["🏀", "⚽", "🧠", "🚑"][idx % 4]}
+                </div>
+                <div className="bg-white/30 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold">
+                  Promedio: {getCourseAverage(course._id)}
+                </div>
               </div>
               <div>
                 <h3 className="font-bold text-2xl mb-2 drop-shadow-sm">{course.nombre}</h3>
