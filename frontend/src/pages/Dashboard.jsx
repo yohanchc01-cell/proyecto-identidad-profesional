@@ -51,6 +51,23 @@ export default function Dashboard() {
     }
   };
 
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const data = new FormData();
+      data.append("file", file);
+      const upload = await axios.post(`${API_URL}/upload`, data);
+      const res = await axios.put(`${API_URL}/auth/user/${user._id}`, { fotoUrl: upload.data.url });
+      
+      setUserData(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data));
+      alert("Foto de perfil actualizada ✅");
+    } catch (err) {
+      alert("Error al actualizar foto");
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -163,14 +180,26 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="relative mt-8 md:mt-0">
-            <div className="w-48 h-48 rounded-full border-8 border-indigo-50 overflow-hidden shadow-2xl bg-gray-100 flex items-center justify-center">
+          <div className="relative mt-8 md:mt-0 flex flex-col items-center">
+            <div className="w-48 h-48 rounded-full border-8 border-indigo-50 overflow-hidden shadow-2xl bg-gray-100 flex items-center justify-center relative group">
               {userData?.fotoUrl ? (
                 <img src={userData.fotoUrl} alt="Foto Perfil" className="w-full h-full object-cover" />
               ) : (
                 <span className="text-7xl">👤</span>
               )}
+              {/* Overlay para subir foto directamente */}
+              <label className="absolute inset-0 bg-black/40 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer text-xs font-bold p-4 text-center">
+                <span>➕</span>
+                <span>Cambiar Foto</span>
+                <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
+              </label>
             </div>
+            {!userData?.fotoUrl && (
+              <label className="mt-4 text-primary text-xs font-bold uppercase tracking-wider cursor-pointer hover:underline">
+                ➕ Agregar Imagen
+                <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
+              </label>
+            )}
             <div className="absolute -top-4 -right-4 bg-white p-3 rounded-2xl shadow-xl border border-indigo-50 transform rotate-12">
               <span className="text-3xl">🎓</span>
             </div>
