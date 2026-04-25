@@ -6,11 +6,8 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    if (window.confirm("¿Deseas cerrar sesión?")) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
-    }
+    localStorage.clear();
+    window.location.href = "/login";
   };
 
   return (

@@ -176,8 +176,10 @@ export default function Dashboard() {
                 {["🏀", "⚽", "🧠", "🚑"][idx % 4]}
               </div>
               <div>
-                <h3 className="font-bold text-xl mb-1">{course.nombre}</h3>
-                <p className="text-white/70 text-xs">Acceder al curso →</p>
+                <h3 className="font-bold text-2xl mb-2 drop-shadow-sm">{course.nombre}</h3>
+                <div className="bg-white/30 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-xs font-bold w-fit hover:bg-white/50 transition-all">
+                  Ver Actividades →
+                </div>
               </div>
             </div>
           ))}
