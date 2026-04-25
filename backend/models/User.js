@@ -15,6 +15,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "estudiante"
   }
-});
+}, { strict: false });
 
 module.exports = mongoose.model("User", userSchema);

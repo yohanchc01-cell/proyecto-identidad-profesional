@@ -40,6 +40,7 @@ export default function Register() {
             placeholder="Nombre completo"
             required
             className="w-full p-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary"
+            value={form.nombre}
             onChange={(e) => setForm({ ...form, nombre: e.target.value })}
           />
           <input
@@ -47,6 +48,7 @@ export default function Register() {
             placeholder="Correo electrónico"
             required
             className="w-full p-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary"
+            value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
           <input
@@ -54,6 +56,7 @@ export default function Register() {
             placeholder="Contraseña"
             required
             className="w-full p-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary"
+            value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
           <input
@@ -61,6 +64,7 @@ export default function Register() {
             placeholder="Documento de identidad"
             required
             className="w-full p-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary"
+            value={form.documento}
             onChange={(e) => setForm({ ...form, documento: e.target.value })}
           />
           <input
@@ -68,6 +72,7 @@ export default function Register() {
             placeholder="Universidad"
             required
             className="w-full p-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary"
+            value={form.universidad}
             onChange={(e) => setForm({ ...form, universidad: e.target.value })}
           />
           <input

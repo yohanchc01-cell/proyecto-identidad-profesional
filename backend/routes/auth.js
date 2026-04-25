@@ -109,16 +109,16 @@ router.put("/user/:id", async (req, res) => {
 
     await user.save();
     
-    console.log("SINCRONIZACIÓN EXITOSA ✅", { 
+    console.log("DATOS GUARDADOS EN DB ✅", { 
       id: user._id, 
-      n: user.nombre, 
-      u: user.universidad, 
-      c: user.carrera 
+      nombre: user.nombre,
+      universidad: user.universidad,
+      carrera: user.carrera 
     });
     res.json(user);
   } catch (error) {
-    console.error("ERROR CRÍTICO EN UPDATE:", error);
-    res.status(500).json("Error interno deel servidor");
+    console.error("ERROR CRÍTICO AL GUARDAR:", error);
+    res.status(500).json("Error interno del servidor");
   }
 });
 
