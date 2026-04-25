@@ -42,6 +42,17 @@ router.get("/course/:courseId", async (req, res) => {
   res.json(data);
 });
 
+// 🔹 Editar actividad
+router.put("/:id", async (req, res) => {
+  try {
+    const activity = await Activity.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    await updateSkills(activity.userId);
+    res.json(activity);
+  } catch (error) {
+    res.status(500).json({ error: "Error al editar actividad" });
+  }
+});
+
 // 🔹 Eliminar
 router.delete("/:id", async (req, res) => {
   await Activity.findByIdAndDelete(req.params.id);

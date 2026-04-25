@@ -92,14 +92,22 @@ export default function CourseDetail() {
             </div>
 
             <div className="flex items-center justify-between border-t border-gray-100 pt-6">
-              <a
-                href={a.pdfUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="bg-primary/10 text-primary px-6 py-2 rounded-xl font-bold text-sm hover:bg-primary hover:text-white transition-all shadow-sm"
-              >
-                Abrir PDF
-              </a>
+              <div className="flex gap-4">
+                <a
+                  href={a.pdfUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-primary/10 text-primary px-4 py-2 rounded-xl font-bold text-sm hover:bg-primary hover:text-white transition-all shadow-sm"
+                >
+                  Ver PDF
+                </a>
+                <button
+                  onClick={() => navigate("/activities", { state: { editActivity: a } })}
+                  className="text-gray-400 hover:text-primary font-bold text-sm transition-all"
+                >
+                  Editar
+                </button>
+              </div>
 
               <button
                 onClick={() => deleteActivity(a._id)}

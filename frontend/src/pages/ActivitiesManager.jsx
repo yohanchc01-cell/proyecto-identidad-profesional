@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 import Layout from "../components/Layout";
 
 export default function ActivitiesManager() {
@@ -9,6 +10,7 @@ export default function ActivitiesManager() {
   const [loading, setLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState({ id: null, seconds: 0 });
   const [errors, setErrors] = useState({});
+  const [editingId, setEditingId] = useState(null);
   
   const [formData, setFormData] = useState({
     nombre: "",
@@ -28,9 +30,18 @@ export default function ActivitiesManager() {
 
   const API_URL = "https://proyecto-identidad-profesional.onrender.com/api";
 
+  const location = useLocation();
+
   useEffect(() => {
     fetchData();
-  }, []);
+    
+    // Si venimos de otra página con una actividad para editar (ej: Detalle Curso)
+    if (location.state?.editActivity) {
+      handleEdit(location.state.editActivity);
+      // Limpiar el estado para que no se quede "atrapado" editando si refresca
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const fetchData = async () => {
     const [cRes, aRes] = await Promise.all([
@@ -50,6 +61,7 @@ export default function ActivitiesManager() {
     try {
       const res = await axios.post(`${API_URL}/upload`, fd);
       setFormData({ ...formData, pdfUrl: res.data.url });
+      setErrors(prev => ({ ...prev, pdfUrl: false }));
     } finally {
       setLoading(false);
     }
@@ -62,6 +74,7 @@ export default function ActivitiesManager() {
     } else {
       if (newSkills.length >= 3) return alert("Máximo 3 habilidades");
       newSkills.push(id);
+      setErrors(prev => ({ ...prev, habilidades: false }));
     }
     setFormData({ ...formData, habilidades: newSkills });
   };
@@ -81,11 +94,32 @@ export default function ActivitiesManager() {
     }
 
     setErrors({});
-    await axios.post(`${API_URL}/activities`, { ...formData, userId: user._id });
+    
+    if (editingId) {
+      await axios.put(`${API_URL}/activities/${editingId}`, formData);
+      alert("✅ Actividad actualizada");
+      setEditingId(null);
+    } else {
+      await axios.post(`${API_URL}/activities`, { ...formData, userId: user._id });
+      alert("✅ Actividad creada");
+    }
+
     setFormData({ nombre: "", cursoId: "", habilidades: [], calificacion: "", pdfUrl: "" });
     fetchData();
-    alert("Actividad creada ✅");
     window.dispatchEvent(new CustomEvent("activityUpdated"));
+  };
+
+  const handleEdit = (act) => {
+    setFormData({
+      nombre: act.nombre,
+      cursoId: act.cursoId,
+      habilidades: act.habilidades || [],
+      calificacion: act.calificacion,
+      pdfUrl: act.pdfUrl
+    });
+    setEditingId(act._id);
+    setErrors({});
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const deleteActivity = async (id) => {
@@ -113,7 +147,20 @@ export default function ActivitiesManager() {
     <Layout>
       <h1 className="text-3xl font-bold text-primary-dark mb-6">Mis Actividades y Evidencias</h1>
 
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-3xl shadow-soft mb-10 space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-3xl shadow-soft mb-10 space-y-6 border-2 border-transparent transition-all" style={editingId ? { borderColor: '#5D5FEF' } : {}}>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-800">{editingId ? "✏️ Editando Actividad" : "📝 Registrar Nueva Actividad"}</h2>
+          {editingId && (
+            <button 
+              type="button" 
+              onClick={() => { setEditingId(null); setFormData({ nombre: "", cursoId: "", habilidades: [], calificacion: "", pdfUrl: "" }); setErrors({}); }}
+              className="text-xs font-bold text-red-500 hover:underline"
+            >
+              Cancelar Edición
+            </button>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Nombre de la Actividad</label>
@@ -175,20 +222,26 @@ export default function ActivitiesManager() {
           </div>
         </div>
 
-        <button className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-primary-dark transition-all">
-          Guardar Actividad
+        <button className={`w-full py-4 rounded-2xl font-bold shadow-lg transition-all text-white ${editingId ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-primary hover:bg-primary-dark'}`}>
+          {editingId ? "Actualizar Actividad" : "Guardar Actividad"}
         </button>
       </form>
 
       <div className="space-y-4">
         {activities.map(a => (
-          <div key={a._id} className="bg-white p-6 rounded-3xl shadow-soft flex justify-between items-center">
+          <div key={a._id} className="bg-white p-6 rounded-3xl shadow-soft flex justify-between items-center border border-transparent hover:border-indigo-100 transition-all">
             <div>
               <h3 className="font-bold text-gray-800">{a.nombre}</h3>
               <p className="text-xs text-gray-400">Calificación: {a.calificacion} • {a.habilidades?.length} habilidades</p>
             </div>
             <div className="flex gap-4 items-center">
-              {a.pdfUrl && <a href={a.pdfUrl} target="_blank" className="text-primary text-sm font-bold">Ver PDF</a>}
+              {a.pdfUrl && <a href={a.pdfUrl} target="_blank" className="bg-indigo-50 text-primary px-3 py-1 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-all">Ver PDF</a>}
+              <button 
+                onClick={() => handleEdit(a)}
+                className="text-gray-400 hover:text-primary transition-all text-sm font-bold"
+              >
+                Editar
+              </button>
               <button 
                 onClick={() => deleteActivity(a._id)} 
                 className={`text-sm font-bold transition-all duration-300 ${confirmDelete.id === a._id ? 'bg-red-500 text-white px-4 py-2 rounded-xl shadow-lg scale-105' : 'text-red-400 hover:text-red-600'}`}
