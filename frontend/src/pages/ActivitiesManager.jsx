@@ -135,8 +135,8 @@ export default function ActivitiesManager() {
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Habilidades Desarrolladas (1-3)</label>
+        <div className={`p-6 rounded-3xl transition-all ${errors.habilidades ? 'ring-2 ring-red-500 bg-red-50' : 'bg-gray-50'}`}>
+          <label className="block text-sm font-bold text-gray-700 mb-2">Habilidades Desarrolladas (1-3) <span className="text-red-500">*</span></label>
           <div className="flex flex-wrap gap-2">
             {skillsList.map(s => (
               <button
@@ -144,13 +144,14 @@ export default function ActivitiesManager() {
                 type="button"
                 onClick={() => toggleSkill(s.id)}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
-                  formData.habilidades.includes(s.id) ? 'bg-primary text-white shadow-md' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  formData.habilidades.includes(s.id) ? 'bg-primary text-white shadow-md' : 'bg-white text-gray-500 hover:bg-gray-100 border border-gray-200'
                 }`}
               >
                 {s.name}
               </button>
             ))}
           </div>
+          {errors.habilidades && <p className="text-[10px] text-red-500 font-bold mt-2">Selecciona al menos una habilidad obligatoriamente.</p>}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
