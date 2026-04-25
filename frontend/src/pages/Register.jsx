@@ -70,9 +70,14 @@ export default function Register() {
             className="w-full p-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary"
             onChange={(e) => setForm({ ...form, universidad: e.target.value })}
           />
-          <div className="p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-primary text-sm font-semibold">
-            Carrera: {form.carrera}
-          </div>
+          <input
+            type="text"
+            placeholder="Carrera / Programa"
+            required
+            className="w-full p-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary"
+            value={form.carrera}
+            onChange={(e) => setForm({ ...form, carrera: e.target.value })}
+          />
 
           <button
             type="submit"
