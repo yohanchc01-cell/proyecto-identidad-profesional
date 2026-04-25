@@ -115,31 +115,92 @@ export default function Dashboard() {
     return (sum / courseActivities.length).toFixed(1);
   };
 
+  const calculateStats = () => {
+    const radarData = skillsList.map(s => {
+      const map = {};
+      activities.forEach(a => {
+        a.habilidades?.forEach(h => {
+          if (!map[h]) map[h] = [];
+          map[h].push(Number(a.calificacion || 0));
+        });
+      });
+      return {
+        subject: s.id,
+        value: map[s.id]?.length ? map[s.id].reduce((a, b) => a + b, 0) / map[s.id].length : 0
+      };
+    });
+
+    const sorted = [...radarData].sort((a, b) => b.value - a.value);
+    const topSkill = sorted[0]?.value > 0 ? sorted[0].subject : "N/A";
+    const avg = activities.length ? (activities.reduce((a, b) => a + Number(b.calificacion || 0), 0) / activities.length).toFixed(1) : "0.0";
+
+    return { topSkill, avg, total: activities.length, courses: courses.length };
+  };
+
+  const dashboardStats = calculateStats();
+
   return (
     <Layout>
       {/* Welcome Section */}
-      <section className="mb-10">
-        <div className="bg-white p-10 rounded-3xl flex items-center justify-between shadow-soft border border-indigo-50">
-          <div className="max-w-lg">
-            <h1 className="text-4xl font-bold mb-4">Bienvenido, {userData?.nombre}</h1>
-            <p className="text-gray-500 mb-6 font-medium">
-              Carrera: <span className="text-primary">{userData?.carrera || "No definida"}</span> • 
-              Universidad: <span className="text-primary">{userData?.universidad || "No definida"}</span>
+      <section className="mb-8">
+        <div className="bg-white p-10 rounded-3xl flex flex-col md:flex-row items-center justify-between shadow-soft border border-indigo-50 relative overflow-hidden">
+          <div className="max-w-xl z-10 text-center md:text-left">
+            <h1 className="text-4xl font-black mb-4 text-gray-800">Bienvenido, {userData?.nombre}</h1>
+            <p className="text-gray-500 mb-8 font-medium text-lg leading-relaxed">
+              Carrera: <span className="text-primary font-bold">{userData?.carrera || "No definida"}</span> <br/>
+              Universidad: <span className="text-primary font-bold">{userData?.universidad || "No definida"}</span>
             </p>
-            <div className="flex gap-4 no-print">
+            <div className="flex flex-wrap gap-4 no-print justify-center md:justify-start">
               <button 
                 onClick={() => navigate("/profile")}
-                className="bg-[#5D5FEF] text-white px-8 py-4 rounded-2xl font-bold shadow-lg hover:translate-y-[-2px] transition-all cursor-pointer"
+                className="bg-[#5D5FEF] text-white px-8 py-4 rounded-2xl font-bold shadow-lg hover:scale-105 transition-all cursor-pointer"
               >
                 Actualizar Perfil
               </button>
-              <button onClick={handleDownloadPDF} className="bg-gray-100 text-gray-600 px-8 py-3 rounded-2xl font-bold hover:bg-gray-200 transition-all">
+              <button onClick={handleDownloadPDF} className="bg-gray-50 text-gray-600 px-8 py-4 rounded-2xl font-bold hover:bg-gray-100 transition-all border border-gray-100">
                 Descargar Portafolio
               </button>
             </div>
           </div>
-          <div className="hidden lg:block w-48 h-48 bg-indigo-50 rounded-full flex items-center justify-center">
-            <span className="text-6xl">🎓</span>
+
+          <div className="relative mt-8 md:mt-0">
+            <div className="w-48 h-48 rounded-full border-8 border-indigo-50 overflow-hidden shadow-2xl bg-gray-100 flex items-center justify-center">
+              {userData?.fotoUrl ? (
+                <img src={userData.fotoUrl} alt="Foto Perfil" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-7xl">👤</span>
+              )}
+            </div>
+            <div className="absolute -top-4 -right-4 bg-white p-3 rounded-2xl shadow-xl border border-indigo-50 transform rotate-12">
+              <span className="text-3xl">🎓</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Perfil Automatizado Inteligente */}
+      <section className="mb-10 animate-fade-in">
+        <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Perfil Inteligente Automatizado</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-3xl shadow-soft border-b-4 border-primary">
+            <p className="text-gray-400 text-[10px] font-bold uppercase mb-1">Promedio General</p>
+            <h4 className="text-3xl font-black text-gray-800">{dashboardStats.avg}</h4>
+            <div className="mt-2 text-[10px] text-green-500 font-bold bg-green-50 px-2 py-1 rounded-lg w-fit">Desempeño Óptimo</div>
+          </div>
+          <div className="bg-white p-6 rounded-3xl shadow-soft border-b-4 border-folder-blue">
+            <p className="text-gray-400 text-[10px] font-bold uppercase mb-1">Evidencias Cargadas</p>
+            <h4 className="text-3xl font-black text-gray-800">{dashboardStats.total}</h4>
+            <div className="mt-2 text-[10px] text-indigo-500 font-bold bg-indigo-50 px-2 py-1 rounded-lg w-fit">Progreso Registrado</div>
+          </div>
+          <div className="bg-white p-6 rounded-3xl shadow-soft border-b-4 border-folder-orange">
+            <p className="text-gray-400 text-[10px] font-bold uppercase mb-1">Cursos Activos</p>
+            <h4 className="text-3xl font-black text-gray-800">{dashboardStats.courses}</h4>
+            <div className="mt-2 text-[10px] text-orange-500 font-bold bg-orange-50 px-2 py-1 rounded-lg w-fit">Materias en Curso</div>
+          </div>
+          <div className="bg-white p-6 rounded-3xl shadow-soft border-b-4 border-folder-green">
+            <p className="text-gray-400 text-[10px] font-bold uppercase mb-1">Fortaleza Principal</p>
+            <h4 className="text-sm font-black text-gray-800 uppercase truncate">{dashboardStats.topSkill !== 'N/A' ? (skillsList.find(s => s.id === dashboardStats.topSkill)?.name.split(' ')[0]) : 'S/N'}</h4>
+            <div className="mt-2 text-[10px] text-green-600 font-bold bg-green-50 px-2 py-1 rounded-lg w-fit">Punta de Lanza</div>
           </div>
         </div>
       </section>

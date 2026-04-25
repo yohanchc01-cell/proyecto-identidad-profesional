@@ -7,11 +7,29 @@ export default function Profile() {
   const [formData, setFormData] = useState({
     nombre: user?.nombre || "",
     universidad: user?.universidad || "",
-    carrera: user?.carrera || ""
+    carrera: user?.carrera || "",
+    fotoUrl: user?.fotoUrl || ""
   });
+  const [loading, setLoading] = useState(false);
   
   const [msg, setMsg] = useState("");
   const API_URL = "https://proyecto-identidad-profesional.onrender.com/api";
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setLoading(true);
+    const data = new FormData();
+    data.append("file", file);
+    try {
+      const upload = await axios.post(`${API_URL}/upload`, data);
+      setFormData({ ...formData, fotoUrl: upload.data.url });
+    } catch (err) {
+      alert("Error al subir foto");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -33,6 +51,24 @@ export default function Profile() {
         <p className="text-gray-500 mb-10">Mantén tu información académica actualizada para tu portafolio.</p>
 
         <form onSubmit={handleUpdate} className="bg-white p-8 rounded-3xl shadow-soft space-y-6">
+          <div className="flex flex-col items-center mb-8">
+            <div className="relative w-32 h-32 mb-4 group">
+              <div className="w-full h-full rounded-full bg-gray-100 overflow-hidden border-4 border-indigo-50 shadow-inner flex items-center justify-center">
+                {formData.fotoUrl ? (
+                  <img src={formData.fotoUrl} alt="Perfil" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-4xl">👤</span>
+                )}
+              </div>
+              <label className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full cursor-pointer shadow-lg hover:scale-110 transition-all">
+                📷
+                <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
+              </label>
+              {loading && <div className="absolute inset-0 bg-white/60 rounded-full flex items-center justify-center animate-pulse text-primary font-bold text-xs text-center">Subiendo...</div>}
+            </div>
+            <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest italic">Haz clic en la cámara para subir tu foto</p>
+          </div>
+
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Nombre Completo</label>
             <input 
