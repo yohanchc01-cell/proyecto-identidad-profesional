@@ -12,7 +12,7 @@ router.post("/", async (req, res) => {
   let assignedUsers = userIds;
 
   if (assignToAll) {
-    const students = await User.find({ role: "estudiante" });
+    const students = await User.find({});
     assignedUsers = students.map(s => s._id);
   }
 
