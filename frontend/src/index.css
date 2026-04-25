@@ -1,3 +1,34 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Colores Personalizados */
+  --color-primary: #5D5FEF;
+  --color-primary-dark: #1E1B4B;
+  --color-primary-light: #F5F7FF;
+  
+  --color-folder-red: #FF6B6B;
+  --color-folder-blue: #4D96FF;
+  --color-folder-orange: #FFAD60;
+  --color-folder-green: #6BCB77;
+
+  /* Sombras y Radios */
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 10px 30px rgba(93, 95, 239, 0.1);
+  
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+}
+
+@layer base {
+  body {
+    @apply bg-primary-light text-gray-800 antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Clases Útiles */
+.no-print {
+  @media print {
+    display: none !important;
+  }
+}
