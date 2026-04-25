@@ -21,7 +21,8 @@ export default function Profile() {
       setMsg("Perfil actualizado con éxito ✅");
       setTimeout(() => setMsg(""), 3000);
     } catch (error) {
-      setMsg("Error al actualizar ❌");
+      console.error("Fallo de actualización:", error.response?.data || error.message);
+      setMsg(`Error: ${error.response?.data || "Conexión fallida"} ❌`);
     }
   };
 

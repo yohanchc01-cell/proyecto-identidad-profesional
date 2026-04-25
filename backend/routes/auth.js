@@ -93,12 +93,26 @@ router.delete("/user/:id", async (req, res) => {
 
 router.put("/update/:id", async (req, res) => {
   const { nombre, universidad, carrera } = req.body;
-  const user = await User.findByIdAndUpdate(
-    req.params.id,
-    { nombre, universidad, carrera },
-    { new: true }
-  );
-  res.json(user);
+  console.log("Actualizando usuario:", req.params.id, { nombre, universidad, carrera });
+  
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { nombre, universidad, carrera },
+      { new: true, runValidators: false }
+    );
+    
+    if (!user) {
+      console.log("Usuario no encontrado ❌");
+      return res.status(404).json("Usuario no encontrado");
+    }
+    
+    console.log("Usuario actualizado ✅");
+    res.json(user);
+  } catch (error) {
+    console.error("Error en update:", error);
+    res.status(500).json("Error interno del servidor");
+  }
 });
 
 router.put("/user/:id", async (req, res) => {
