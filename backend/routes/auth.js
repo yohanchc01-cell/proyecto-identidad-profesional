@@ -91,38 +91,26 @@ router.delete("/user/:id", async (req, res) => {
   res.json({ message: "Usuario eliminado ✅" });
 });
 
-router.put("/update/:id", async (req, res) => {
-  const { nombre, universidad, carrera } = req.body;
-  console.log("Actualizando usuario:", req.params.id, { nombre, universidad, carrera });
+// Actualización de usuario (Consolidada)
+router.put("/user/:id", async (req, res) => {
+  const { nombre, email, role, documento, universidad, carrera } = req.body;
+  console.log("Petición update recibida para:", req.params.id, req.body);
   
   try {
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { nombre, universidad, carrera },
+      { nombre, email, role, documento, universidad, carrera },
       { new: true, runValidators: false }
     );
     
-    if (!user) {
-      console.log("Usuario no encontrado ❌");
-      return res.status(404).json("Usuario no encontrado");
-    }
+    if (!user) return res.status(404).json("Usuario no encontrado");
     
-    console.log("Usuario actualizado ✅");
+    console.log("Usuario actualizado con éxito ✅");
     res.json(user);
   } catch (error) {
-    console.error("Error en update:", error);
+    console.error("Error al actualizar usuario:", error);
     res.status(500).json("Error interno del servidor");
   }
-});
-
-router.put("/user/:id", async (req, res) => {
-  const { nombre, email, role, documento } = req.body;
-  const user = await User.findByIdAndUpdate(
-    req.params.id,
-    { nombre, email, role, documento },
-    { new: true }
-  );
-  res.json(user);
 });
 
 module.exports = router;

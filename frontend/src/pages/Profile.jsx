@@ -16,7 +16,7 @@ export default function Profile() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put(`${API_URL}/auth/update/${user._id || user.id}`, formData);
+      const res = await axios.put(`${API_URL}/auth/user/${user._id || user.id}`, formData);
       localStorage.setItem("user", JSON.stringify(res.data));
       setMsg("Perfil actualizado con éxito ✅");
       setTimeout(() => setMsg(""), 3000);
