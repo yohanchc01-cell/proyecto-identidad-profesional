@@ -16,7 +16,7 @@ export default function Profile() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put(`${API_URL}/auth/update/${user._id}`, formData);
+      const res = await axios.put(`${API_URL}/auth/update/${user._id || user.id}`, formData);
       localStorage.setItem("user", JSON.stringify(res.data));
       setMsg("Perfil actualizado con éxito ✅");
       setTimeout(() => setMsg(""), 3000);
@@ -35,7 +35,7 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Nombre Completo</label>
             <input 
-              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary"
+              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary text-gray-800 font-medium"
               value={formData.nombre}
               onChange={e => setFormData({...formData, nombre: e.target.value})}
             />
@@ -43,7 +43,7 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Universidad</label>
             <input 
-              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary"
+              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary text-gray-800 font-medium"
               value={formData.universidad}
               onChange={e => setFormData({...formData, universidad: e.target.value})}
               placeholder="Ej: Universidad de Antioquia"
@@ -52,18 +52,18 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Carrera / Programa</label>
             <input 
-              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary"
+              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary text-gray-800 font-medium"
               value={formData.carrera}
               onChange={e => setFormData({...formData, carrera: e.target.value})}
               placeholder="Ej: Licenciatura en Educación Física"
             />
           </div>
 
-          <button className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg hover:shadow-primary/30 transition-all">
+          <button className="w-full bg-[#5D5FEF] text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-[#4a4cd9] transition-all cursor-pointer">
             Guardar Cambios
           </button>
           
-          {msg && <p className="text-center text-sm font-bold text-primary animate-bounce">{msg}</p>}
+          {msg && <p className="text-center text-sm font-bold text-indigo-600 animate-bounce">{msg}</p>}
         </form>
       </div>
     </Layout>
