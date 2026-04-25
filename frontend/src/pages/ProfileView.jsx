@@ -48,10 +48,6 @@ export default function ProfileView() {
               <p className="text-lg font-bold text-primary-dark">{userData?.carrera || "No definida"}</p>
             </div>
 
-            <div className="bg-gray-50 p-6 rounded-2xl">
-              <span className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Rol de Usuario</span>
-              <p className="text-lg font-bold text-gray-700 capitalize">{userData?.role || "Estudiante"}</p>
-            </div>
           </div>
           
           <div className="mt-10 p-6 bg-indigo-50/50 rounded-2xl border border-indigo-50">

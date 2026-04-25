@@ -100,19 +100,24 @@ router.put("/user/:id", async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json("Usuario no encontrado");
 
-    if (nombre) user.nombre = nombre;
-    if (email) user.email = email;
-    if (role) user.role = role;
-    if (documento) user.documento = documento;
-    if (universidad) user.universidad = universidad;
-    if (carrera) user.carrera = carrera;
+    user.nombre = nombre || user.nombre;
+    user.email = email || user.email;
+    user.role = role || user.role;
+    user.documento = documento || user.documento;
+    user.universidad = universidad || user.universidad;
+    user.carrera = carrera || user.carrera;
 
     await user.save();
     
-    console.log("Usuario actualizado con éxito (Full Sync) ✅", { universidad, carrera });
+    console.log("SINCRONIZACIÓN EXITOSA ✅", { 
+      id: user._id, 
+      n: user.nombre, 
+      u: user.universidad, 
+      c: user.carrera 
+    });
     res.json(user);
   } catch (error) {
-    console.error("Error al actualizar usuario:", error);
+    console.error("ERROR CRÍTICO EN UPDATE:", error);
     res.status(500).json("Error interno deel servidor");
   }
 });
