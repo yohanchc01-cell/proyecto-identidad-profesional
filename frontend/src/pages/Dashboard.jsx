@@ -36,10 +36,29 @@ export default function Dashboard() {
     setCourses(res.data);
   };
 
+  const [userData, setUserData] = useState(user);
+
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/auth/students`);
+      const found = res.data.find(u => u._id === user._id);
+      if (found) {
+        setUserData(found);
+        localStorage.setItem("user", JSON.stringify(found));
+      }
+    } catch (e) {
+      console.log("Error al refrescar usuario", e);
+    }
+  };
+
   useEffect(() => {
-    if (!user) navigate("/login");
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     fetchCourses();
     fetchActivities();
+    fetchUser();
   }, []);
 
   const createCourse = async () => {
@@ -128,10 +147,10 @@ export default function Dashboard() {
       <section className="mb-10">
         <div className="bg-white p-10 rounded-3xl flex items-center justify-between shadow-soft border border-indigo-50">
           <div className="max-w-lg">
-            <h1 className="text-4xl font-bold mb-4">Bienvenido, {user?.nombre}</h1>
+            <h1 className="text-4xl font-bold mb-4">Bienvenido, {userData?.nombre}</h1>
             <p className="text-gray-500 mb-6 font-medium">
-              Carrera: <span className="text-primary">{user?.carrera || "No definida"}</span> • 
-              Universidad: <span className="text-primary">{user?.universidad || "No definida"}</span>
+              Carrera: <span className="text-primary">{userData?.carrera || "No definida"}</span> • 
+              Universidad: <span className="text-primary">{userData?.universidad || "No definida"}</span>
             </p>
             <div className="flex gap-4 no-print">
               <button 
