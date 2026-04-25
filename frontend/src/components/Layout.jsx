@@ -29,11 +29,12 @@ const Layout = ({ children }) => {
       {/* Right Sidebar Placeholder (can be a component later) */}
       <aside className="w-80 bg-white border-l p-8 hidden xl:flex flex-col h-screen sticky top-0">
         <div className="flex items-center gap-3 mb-10 justify-end">
-          <span className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors">⚙️</span>
-          <span className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors">🔔</span>
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-bold text-primary">JD</div>
-            <span className="font-bold">Usuario</span>
+          <div className="flex items-center gap-2 bg-gray-100 p-2 pr-4 rounded-2xl hover:bg-gray-200 transition-all cursor-pointer group" onClick={() => { localStorage.clear(); window.location.href="/login"; }}>
+            <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center font-bold text-primary group-hover:bg-primary group-hover:text-white transition-all">JD</div>
+            <div className="text-left">
+              <span className="block font-bold text-sm leading-tight">Cerrar Sesión</span>
+              <span className="block text-[10px] text-gray-500 uppercase font-bold tracking-wider">Finalizar</span>
+            </div>
           </div>
         </div>
 
