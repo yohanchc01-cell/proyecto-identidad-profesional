@@ -25,14 +25,12 @@ export default function CoursesManager() {
     fetchCourses();
   };
 
-  const toggleStatus = async (id, currentStatus) => {
-    const newStatus = currentStatus === "activo" ? "finalizado" : "activo";
+  const setStatus = async (id, newStatus) => {
     await axios.put(`${API_URL}/courses/${id}`, { estado: newStatus });
     fetchCourses();
   };
 
   const deleteCourse = async (id) => {
-    if (!window.confirm("¿Estás seguro de eliminar este curso? Se borrarán sus actividades.")) return;
     await axios.delete(`${API_URL}/courses/${id}`);
     fetchCourses();
   };
@@ -66,7 +64,7 @@ export default function CoursesManager() {
             <div className="flex gap-4">
               <button 
                 disabled={!course.estado || course.estado === 'activo'}
-                onClick={() => toggleStatus(course._id, 'activo')} 
+                onClick={() => setStatus(course._id, 'activo')} 
                 className={`text-sm font-bold ${(!course.estado || course.estado === 'activo') ? 'text-gray-300 cursor-not-allowed' : 'text-primary hover:underline'}`}
               >
                 Activar
@@ -74,7 +72,7 @@ export default function CoursesManager() {
               
               <button 
                 disabled={course.estado === 'finalizado'}
-                onClick={() => toggleStatus(course._id, 'finalizado')} 
+                onClick={() => setStatus(course._id, 'finalizado')} 
                 className={`text-sm font-bold ${(course.estado === 'finalizado') ? 'text-gray-300 cursor-not-allowed' : 'text-orange-500 hover:underline'}`}
               >
                 Finalizar
