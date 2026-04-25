@@ -255,12 +255,16 @@ export default function Dashboard() {
           </div>
 
           <div className="w-full mt-8 space-y-4">
-            {radarData.slice(0, 3).map((s, i) => (
-              <div key={s.subject} className="flex justify-between items-center text-sm p-3 bg-gray-50 rounded-xl">
-                <span className="font-medium text-gray-600">{skillsList.find(sl => sl.id === s.subject)?.name}</span>
-                <span className="font-bold text-primary">{(s.value).toFixed(1)}/5.0</span>
-              </div>
-            ))}
+            {radarData.length > 0 ? radarData.slice(0, 3).map((s, i) => {
+              const skillInfo = skillsList.find(sl => sl.id === s.subject);
+              if (!skillInfo) return null;
+              return (
+                <div key={s.subject} className="flex justify-between items-center text-sm p-3 bg-gray-50 rounded-xl">
+                  <span className="font-medium text-gray-600">{skillInfo.name}</span>
+                  <span className="font-bold text-primary">{(s.value).toFixed(1)}/5.0</span>
+                </div>
+              );
+            }) : <p className="text-gray-400 text-xs italic">No hay datos suficientes</p>}
           </div>
         </div>
       </div>

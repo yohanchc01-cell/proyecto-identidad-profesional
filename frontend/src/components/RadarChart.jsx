@@ -19,10 +19,12 @@ const RadarChartComponent = ({ data }) => {
     eticaDeportiva: "Ética",
   };
 
-  const chartData = data.map((item) => ({
+  const chartData = (data || []).map((item) => ({
     ...item,
     subject: labelMap[item.subject] || item.subject,
   }));
+
+  if (!chartData.length) return <div className="h-64 flex items-center justify-center text-gray-400 italic">Sin datos registrados</div>;
 
   return (
     <div className="w-full h-64">
