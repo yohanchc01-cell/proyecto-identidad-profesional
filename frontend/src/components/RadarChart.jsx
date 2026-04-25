@@ -1,51 +1,47 @@
+import React from "react";
 import {
   Radar,
   RadarChart,
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from "recharts";
 
-export default function RadarChartComponent({ data }) {
+const RadarChartComponent = ({ data }) => {
+  const labelMap = {
+    pedagogia: "Pedagogía",
+    anatomia: "Anatomía",
+    planificacion: "Planificación",
+    primerosAuxilios: "1ros Auxilios",
+    liderazgoEquipo: "Liderazgo",
+    evaluacionFisica: "Evaluación",
+    eticaDeportiva: "Ética",
+  };
 
-  const chartData = data || [
-    { subject: "Comunicación", value: 0 },
-    { subject: "Liderazgo", value: 0 },
-    { subject: "Trabajo en equipo", value: 0 },
-    { subject: "Creatividad", value: 0 },
-    { subject: "Resolución", value: 0 }
-  ];
+  const chartData = data.map((item) => ({
+    ...item,
+    subject: labelMap[item.subject] || item.subject,
+  }));
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <RadarChart data={chartData} outerRadius={150}>
-
-        <PolarGrid />
-
-        {/* 🔥 NOMBRES MÁS LEGIBLES */}
-        <PolarAngleAxis
-          dataKey="subject"
-          tick={{ fontSize: 13, fill: "#374151" }}
-        />
-
-        {/* 🔥 ESCALA CLARA (0 a 5) */}
-        <PolarRadiusAxis
-          angle={30}
-          domain={[0, 5]}
-          tick={{ fontSize: 10 }}
-        />
-
-        {/* 🔥 RADAR MÁS PRO */}
-        <Radar
-          name="Habilidades"
-          dataKey="value"
-          stroke="#2563eb"
-          fill="#3b82f6"
-          fillOpacity={0.5}
-        />
-
-      </RadarChart>
-    </ResponsiveContainer>
+    <div className="w-full h-64">
+      <ResponsiveContainer width="100%" height="100%">
+        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+          <PolarGrid stroke="#E5E7EB" />
+          <PolarAngleAxis dataKey="subject" tick={{ fill: "#6B7280", fontSize: 10 }} />
+          <PolarRadiusAxis angle={30} domain={[0, 5]} tick={false} axisLine={false} />
+          <Radar
+            name="Habilidades"
+            dataKey="value"
+            stroke="#5D5FEF"
+            fill="#5D5FEF"
+            fillOpacity={0.6}
+          />
+        </RadarChart>
+      </ResponsiveContainer>
+    </div>
   );
-}
+};
+
+export default RadarChartComponent;

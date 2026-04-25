@@ -1,94 +1,70 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
-  const [isRegister, setIsRegister] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    documento: "",
-    nombre: "",
-    email: "",
-    password: "",
-    role: "estudiante"
-  });
+  const API_URL = "https://proyecto-identidad-profesional.onrender.com/api";
 
-  const handleSubmit = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     try {
-      if (isRegister) {
-        await axios.post("https://proyecto-identidad-profesional.onrender.com/api/auth/register", form);
-        alert("Usuario registrado ✅");
-        setIsRegister(false);
-      } else {
-        const res = await axios.post("https://proyecto-identidad-profesional.onrender.com/api/auth/login", {
-          email: form.email,
-          password: form.password
-        });
-
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        localStorage.setItem("token", res.data.token);
-
-        window.location.reload();
-      }
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      navigate("/dashboard");
     } catch (error) {
-      alert("Error ❌");
+      alert(error.response?.data || "Error al iniciar sesión ❌");
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-primary-light p-4">
+      <div className="bg-white p-10 rounded-3xl shadow-medium w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg text-white text-2xl font-bold">PI</div>
+          <h1 className="text-3xl font-bold text-primary-dark">Bienvenido</h1>
+          <p className="text-gray-500 mt-2">Gestiona tu identidad profesional</p>
+        </div>
 
-      <div className="bg-white p-8 rounded shadow w-80">
-
-        <h2 className="text-xl mb-4 text-center">
-          {isRegister ? "Registro" : "Login"}
-        </h2>
-
-        {isRegister && (
-          <>
-            <input placeholder="Documento"
-              className="border p-2 w-full mb-2"
-              onChange={(e) => setForm({ ...form, documento: e.target.value })}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Email</label>
+            <input
+              type="email"
+              required
+              className="w-full p-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary transition-all"
+              placeholder="tu@correo.com"
+              onChange={(e) => setEmail(e.target.value)}
             />
-
-            <input placeholder="Nombre"
-              className="border p-2 w-full mb-2"
-              onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2 ml-1">Contraseña</label>
+            <input
+              type="password"
+              required
+              className="w-full p-4 rounded-2xl bg-gray-50 border-none outline-none focus:ring-2 focus:ring-primary transition-all"
+              placeholder="••••••••"
+              onChange={(e) => setPassword(e.target.value)}
             />
+          </div>
 
-            <select
-              className="border p-2 w-full mb-2"
-              onChange={(e) => setForm({ ...form, role: e.target.value })}
-            >
-              <option value="estudiante">Estudiante</option>
-              <option value="docente">Docente</option>
-            </select>
-          </>
-        )}
+          <button
+            type="submit"
+            className="w-full bg-primary text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-primary/90 transition-all transform hover:scale-[1.01]"
+          >
+            Iniciar Sesión
+          </button>
+        </form>
 
-        <input placeholder="Correo"
-          className="border p-2 w-full mb-2"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
-
-        <input type="password" placeholder="Contraseña"
-          className="border p-2 w-full mb-2"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-        />
-
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-600 text-white w-full p-2 rounded"
-        >
-          {isRegister ? "Registrarse" : "Ingresar"}
-        </button>
-
-        <p
-          onClick={() => setIsRegister(!isRegister)}
-          className="text-sm text-blue-600 mt-3 cursor-pointer text-center"
-        >
-          {isRegister ? "Ya tengo cuenta" : "Crear cuenta"}
-        </p>
-
+        <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+          <p className="text-gray-500 text-sm">
+            ¿No tienes cuenta? <Link to="/register" className="text-primary font-bold hover:underline">Regístrate ahora</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

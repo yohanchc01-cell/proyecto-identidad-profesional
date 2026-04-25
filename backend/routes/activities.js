@@ -1,11 +1,36 @@
-const express = require("express");
-const router = express.Router();
-const Activity = require("../models/Activity");
+const Skill = require("../models/Skill");
+
+// 🔹 Función para recalcular habilidades
+const updateSkills = async (userId) => {
+  const activities = await Activity.find({ userId });
+  const skillsList = ["pedagogia", "anatomia", "planificacion", "primerosAuxilios", "liderazgoEquipo", "evaluacionFisica", "eticaDeportiva"];
+  
+  const scores = {};
+  skillsList.forEach(s => scores[s] = []);
+
+  activities.forEach(a => {
+    a.habilidades?.forEach(h => {
+      if (scores[h]) scores[h].push(a.calificacion);
+    });
+  });
+
+  const finalScores = {};
+  skillsList.forEach(s => {
+    finalScores[s] = scores[s].length ? scores[s].reduce((a, b) => a + b, 0) / scores[s].length : 0;
+  });
+
+  await Skill.findOneAndUpdate({ userId }, finalScores, { upsert: true });
+};
 
 // 🔹 Crear actividad
 router.post("/", async (req, res) => {
-  const activity = await Activity.create(req.body);
-  res.json(activity);
+  try {
+    const activity = await Activity.create(req.body);
+    await updateSkills(req.body.userId);
+    res.json(activity);
+  } catch (error) {
+    res.status(500).json({ error: "Error al crear actividad" });
+  }
 });
 
 // 🔹 Obtener por curso

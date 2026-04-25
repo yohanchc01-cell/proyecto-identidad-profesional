@@ -1,0 +1,52 @@
+import React from "react";
+import Sidebar from "./Sidebar";
+
+const Layout = ({ children }) => {
+  return (
+    <div className="flex min-h-screen bg-primary-light font-sans text-gray-800">
+      <Sidebar />
+      <main className="flex-1 p-8 overflow-y-auto">
+        <header className="flex justify-between items-center mb-10">
+          <div className="relative w-96">
+            <input
+              type="text"
+              placeholder="Buscar actividades, cursos..."
+              className="w-full p-4 pl-12 rounded-2xl bg-white border-none shadow-soft focus:ring-2 focus:ring-primary outline-none"
+            />
+            <span className="absolute left-4 top-4 opacity-40">🔍</span>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <button className="bg-primary text-white px-6 py-3 rounded-full font-semibold shadow-medium hover:bg-primary/90 transition-all">
+              + Nueva Actividad
+            </button>
+          </div>
+        </header>
+        
+        {children}
+      </main>
+
+      {/* Right Sidebar Placeholder (can be a component later) */}
+      <aside className="w-80 bg-white border-l p-8 hidden xl:flex flex-col h-screen sticky top-0">
+        <div className="flex items-center gap-3 mb-10 justify-end">
+          <span className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors">⚙️</span>
+          <span className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors">🔔</span>
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center font-bold text-primary">JD</div>
+            <span className="font-bold">Usuario</span>
+          </div>
+        </div>
+
+        <div className="flex-1">
+          <h3 className="font-bold mb-6">Mapa de Competencias</h3>
+          {/* Radar icon/chart placeholder */}
+          <div className="aspect-square bg-gray-50 rounded-3xl border border-dashed border-gray-200 flex items-center justify-center text-gray-400 text-sm italic">
+            Radar Chart
+          </div>
+        </div>
+      </aside>
+    </div>
+  );
+};
+
+export default Layout;
