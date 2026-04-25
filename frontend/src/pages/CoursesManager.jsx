@@ -6,6 +6,7 @@ export default function CoursesManager() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [courses, setCourses] = useState([]);
   const [newCourse, setNewCourse] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
   
   const API_URL = "https://proyecto-identidad-profesional.onrender.com/api";
 
@@ -31,7 +32,13 @@ export default function CoursesManager() {
   };
 
   const deleteCourse = async (id) => {
+    if (deletingId !== id) {
+      setDeletingId(id);
+      setTimeout(() => setDeletingId(null), 3000); // 3 segundos para confirmar
+      return;
+    }
     await axios.delete(`${API_URL}/courses/${id}`);
+    setDeletingId(null);
     fetchCourses();
   };
 
@@ -78,7 +85,12 @@ export default function CoursesManager() {
                 Finalizar
               </button>
               
-              <button onClick={() => deleteCourse(course._id)} className="text-xs font-bold text-red-300 hover:text-red-500 transition-colors">Eliminar</button>
+              <button 
+                onClick={() => deleteCourse(course._id)} 
+                className={`text-xs font-bold transition-all duration-300 ${deletingId === course._id ? 'bg-red-500 text-white px-3 py-1 rounded-lg' : 'text-red-300 hover:text-red-500'}`}
+              >
+                {deletingId === course._id ? '¿Seguro?' : 'Eliminar'}
+              </button>
             </div>
           </div>
         ))}
