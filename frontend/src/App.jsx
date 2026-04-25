@@ -1,3 +1,6 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import CourseDetail from "./pages/CourseDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CoursesManager from "./pages/CoursesManager";
