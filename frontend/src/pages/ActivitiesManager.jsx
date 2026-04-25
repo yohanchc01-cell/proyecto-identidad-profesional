@@ -8,12 +8,13 @@ export default function ActivitiesManager() {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState({ id: null, seconds: 0 });
+  const [errors, setErrors] = useState({});
   
   const [formData, setFormData] = useState({
     nombre: "",
     cursoId: "",
     habilidades: [],
-    calificacion: 5,
+    calificacion: "",
     pdfUrl: ""
   });
 
@@ -67,11 +68,21 @@ export default function ActivitiesManager() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.nombre || !formData.cursoId || formData.habilidades.length < 1) {
-      return alert("Completa todos los campos (Mínimo 1 habilidad)");
+    const newErrors = {};
+    if (!formData.nombre) newErrors.nombre = true;
+    if (!formData.cursoId) newErrors.cursoId = true;
+    if (formData.habilidades.length < 1) newErrors.habilidades = true;
+    if (!formData.calificacion) newErrors.calificacion = true;
+    if (!formData.pdfUrl) newErrors.pdfUrl = true;
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return alert("⚠️ Por favor completa todos los campos marcados en rojo, incluyendo la subida del PDF.");
     }
+
+    setErrors({});
     await axios.post(`${API_URL}/activities`, { ...formData, userId: user._id });
-    setFormData({ nombre: "", cursoId: "", habilidades: [], calificacion: 5, pdfUrl: "" });
+    setFormData({ nombre: "", cursoId: "", habilidades: [], calificacion: "", pdfUrl: "" });
     fetchData();
     alert("Actividad creada ✅");
   };
@@ -105,7 +116,7 @@ export default function ActivitiesManager() {
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Nombre de la Actividad</label>
             <input 
-              className="w-full bg-gray-50 p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary"
+              className={`w-full bg-gray-50 p-4 rounded-2xl outline-none transition-all ${errors.nombre ? 'ring-2 ring-red-500 bg-red-50' : 'focus:ring-2 focus:ring-primary'}`}
               value={formData.nombre}
               onChange={e => setFormData({...formData, nombre: e.target.value})}
               placeholder="Ej: Análisis de Táctica"
@@ -114,7 +125,7 @@ export default function ActivitiesManager() {
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Curso / Materia</label>
             <select 
-              className="w-full bg-gray-50 p-4 rounded-2xl outline-none"
+              className={`w-full bg-gray-50 p-4 rounded-2xl outline-none transition-all ${errors.cursoId ? 'ring-2 ring-red-500 bg-red-50' : ''}`}
               value={formData.cursoId}
               onChange={e => setFormData({...formData, cursoId: e.target.value})}
             >
@@ -147,16 +158,17 @@ export default function ActivitiesManager() {
             <label className="block text-sm font-bold text-gray-700 mb-2">Calificación (1-5)</label>
             <input 
               type="number" min="1" max="5" step="0.1"
-              className="w-full bg-gray-50 p-4 rounded-2xl"
+              className={`w-full bg-gray-50 p-4 rounded-2xl outline-none transition-all ${errors.calificacion ? 'ring-2 ring-red-500 bg-red-50' : 'focus:ring-2 focus:ring-primary'}`}
               value={formData.calificacion}
               onChange={e => setFormData({...formData, calificacion: e.target.value})}
+              placeholder="Ej: 4.5"
             />
           </div>
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Evidencia PDF</label>
-            <input type="file" accept="application/pdf" onChange={handleFileUpload} className="text-sm" />
-            {loading && <p className="text-xs text-primary animate-pulse">Subiendo...</p>}
-            {formData.pdfUrl && <p className="text-xs text-green-500 font-bold">PDF cargado listo ✅</p>}
+          <div className={`p-4 rounded-3xl border-2 border-dashed transition-all ${errors.pdfUrl ? 'border-red-500 bg-red-50' : formData.pdfUrl ? 'border-green-400 bg-green-50' : 'border-gray-200 bg-gray-50'}`}>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Evidencia PDF (Obligatorio)</label>
+            <input type="file" accept="application/pdf" onChange={handleFileUpload} className="text-sm block w-full file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer" />
+            {loading && <p className="text-xs text-primary animate-pulse mt-2">Subiendo a la nube...</p>}
+            {formData.pdfUrl && <p className="text-xs text-green-600 font-bold mt-2">Evidencia lista para guardar ✅</p>}
           </div>
         </div>
 
