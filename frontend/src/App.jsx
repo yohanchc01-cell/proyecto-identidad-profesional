@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import CoursesManager from "./pages/CoursesManager";
 import ActivitiesManager from "./pages/ActivitiesManager";
 import Profile from "./pages/Profile";
+import ProfileView from "./pages/ProfileView";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/courses" element={<CoursesManager />} />
         <Route path="/activities" element={<ActivitiesManager />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/view-profile" element={<ProfileView />} />
         <Route path="/course/:id" element={<CourseDetail />} />
       </Routes>
     </BrowserRouter>

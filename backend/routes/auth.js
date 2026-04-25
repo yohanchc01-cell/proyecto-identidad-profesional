@@ -97,19 +97,23 @@ router.put("/user/:id", async (req, res) => {
   console.log("Petición update recibida para:", req.params.id, req.body);
   
   try {
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      { nombre, email, role, documento, universidad, carrera },
-      { new: true, runValidators: false }
-    );
-    
+    const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json("Usuario no encontrado");
+
+    if (nombre) user.nombre = nombre;
+    if (email) user.email = email;
+    if (role) user.role = role;
+    if (documento) user.documento = documento;
+    if (universidad) user.universidad = universidad;
+    if (carrera) user.carrera = carrera;
+
+    await user.save();
     
-    console.log("Usuario actualizado con éxito ✅");
+    console.log("Usuario actualizado con éxito (Full Sync) ✅", { universidad, carrera });
     res.json(user);
   } catch (error) {
     console.error("Error al actualizar usuario:", error);
-    res.status(500).json("Error interno del servidor");
+    res.status(500).json("Error interno deel servidor");
   }
 });
 

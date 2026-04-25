@@ -136,9 +136,9 @@ export default function Dashboard() {
             <div className="flex gap-4 no-print">
               <button 
                 onClick={() => navigate("/profile")}
-                className="bg-primary text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:translate-y-[-2px] transition-all"
+                className="bg-[#5D5FEF] text-white px-8 py-4 rounded-2xl font-bold shadow-lg hover:translate-y-[-2px] transition-all cursor-pointer"
               >
-                Ver Mi Perfil
+                Actualizar Perfil
               </button>
               <button onClick={handleDownloadPDF} className="bg-gray-100 text-gray-600 px-8 py-3 rounded-2xl font-bold hover:bg-gray-200 transition-all">
                 Descargar Portafolio

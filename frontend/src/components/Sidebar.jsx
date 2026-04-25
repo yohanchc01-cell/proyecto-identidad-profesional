@@ -22,14 +22,14 @@ const Sidebar = () => {
         <Link to="/dashboard" className={`flex items-center gap-4 p-4 rounded-2xl transition-all font-semibold ${isActive("/dashboard") || isActive("/") ? "bg-white/10 text-white" : "text-white/50 hover:bg-white/5 hover:text-white"}`}>
           🏠 Dashboard
         </Link>
+        <Link to="/view-profile" className={`flex items-center gap-4 p-4 rounded-2xl transition-all font-semibold ${isActive("/view-profile") ? "bg-white/10 text-white" : "text-white/50 hover:bg-white/5 hover:text-white"}`}>
+          👤 Mi Perfil
+        </Link>
         <Link to="/courses" className={`flex items-center gap-4 p-4 rounded-2xl transition-all font-semibold ${isActive("/courses") ? "bg-white/10 text-white" : "text-white/50 hover:bg-white/5 hover:text-white"}`}>
           📚 Mis Cursos
         </Link>
         <Link to="/activities" className={`flex items-center gap-4 p-4 rounded-2xl transition-all font-semibold ${isActive("/activities") ? "bg-white/10 text-white" : "text-white/50 hover:bg-white/5 hover:text-white"}`}>
           📝 Mis Actividades
-        </Link>
-        <Link to="/profile" className={`flex items-center gap-4 p-4 rounded-2xl transition-all font-semibold ${isActive("/profile") ? "bg-white/10 text-white" : "text-white/50 hover:bg-white/5 hover:text-white"}`}>
-          👤 Mi Perfil
         </Link>
       </nav>
 
