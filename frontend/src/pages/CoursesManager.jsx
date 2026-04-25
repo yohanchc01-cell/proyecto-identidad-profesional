@@ -59,23 +59,23 @@ export default function CoursesManager() {
           <div key={course._id} className="bg-white p-6 rounded-3xl shadow-soft border border-indigo-50 flex justify-between items-center">
             <div>
               <h3 className="text-xl font-bold text-gray-800">{course.nombre}</h3>
-              <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-md ${course.estado === 'activo' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
-                {course.estado === 'activo' ? 'Activo' : 'Finalizado'}
+              <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-md ${(!course.estado || course.estado === 'activo') ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
+                {(!course.estado || course.estado === 'activo') ? 'Activo' : 'Finalizado'}
               </span>
             </div>
             <div className="flex gap-4">
               <button 
-                disabled={course.estado === 'activo'}
-                onClick={() => toggleStatus(course._id, 'finalizado')} 
-                className={`text-sm font-bold ${course.estado !== 'activo' ? 'text-primary hover:underline' : 'text-gray-300 cursor-not-allowed'}`}
+                disabled={!course.estado || course.estado === 'activo'}
+                onClick={() => toggleStatus(course._id, 'activo')} 
+                className={`text-sm font-bold ${(!course.estado || course.estado === 'activo') ? 'text-gray-300 cursor-not-allowed' : 'text-primary hover:underline'}`}
               >
                 Activar
               </button>
               
               <button 
                 disabled={course.estado === 'finalizado'}
-                onClick={() => toggleStatus(course._id, 'activo')} 
-                className={`text-sm font-bold ${course.estado === 'activo' ? 'text-orange-500 hover:underline' : 'text-gray-300 cursor-not-allowed'}`}
+                onClick={() => toggleStatus(course._id, 'finalizado')} 
+                className={`text-sm font-bold ${(course.estado === 'finalizado') ? 'text-gray-300 cursor-not-allowed' : 'text-orange-500 hover:underline'}`}
               >
                 Finalizar
               </button>
