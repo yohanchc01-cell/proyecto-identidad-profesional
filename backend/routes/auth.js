@@ -91,15 +91,23 @@ router.delete("/user/:id", async (req, res) => {
   res.json({ message: "Usuario eliminado ✅" });
 });
 
+router.put("/update/:id", async (req, res) => {
+  const { nombre, universidad, carrera } = req.body;
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    { nombre, universidad, carrera },
+    { new: true }
+  );
+  res.json(user);
+});
+
 router.put("/user/:id", async (req, res) => {
   const { nombre, email, role, documento } = req.body;
-
   const user = await User.findByIdAndUpdate(
     req.params.id,
     { nombre, email, role, documento },
     { new: true }
   );
-
   res.json(user);
 });
 

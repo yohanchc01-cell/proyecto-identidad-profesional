@@ -10,13 +10,11 @@ import {
 
 const RadarChartComponent = ({ data }) => {
   const labelMap = {
-    pedagogia: "Pedagogía",
-    anatomia: "Anatomía",
-    planificacion: "Planificación",
-    primerosAuxilios: "1ros Auxilios",
-    liderazgoEquipo: "Liderazgo",
-    evaluacionFisica: "Evaluación",
-    eticaDeportiva: "Ética",
+    comunicacion: "Comunicación",
+    liderazgo: "Liderazgo",
+    adaptabilidad: "Adaptabilidad",
+    gestionDeportiva: "Gestión",
+    trabajoEquipo: "Trabajo en Equipo",
   };
 
   const chartData = (data || []).map((item) => ({

@@ -74,13 +74,11 @@ export default function Dashboard() {
   };
 
   const skillsList = [
-    { id: "pedagogia", name: "Pedagogía" },
-    { id: "anatomia", name: "Anatomía" },
-    { id: "planificacion", name: "Planificación" },
-    { id: "primerosAuxilios", name: "1ros Auxilios" },
-    { id: "liderazgoEquipo", name: "Liderazgo" },
-    { id: "evaluacionFisica", name: "Evaluación" },
-    { id: "eticaDeportiva", name: "Ética" },
+    { id: "comunicacion", name: "Comunicación y Escucha Activa" },
+    { id: "liderazgo", name: "Liderazgo y Motivación" },
+    { id: "adaptabilidad", name: "Adaptabilidad y Resolución de Problemas" },
+    { id: "gestionDeportiva", name: "Gestión Deportiva" },
+    { id: "trabajoEquipo", name: "Trabajo en equipo" },
   ];
 
   const calculateRadarData = () => {
@@ -109,13 +107,11 @@ export default function Dashboard() {
     if (weakest.value > 4) return "¡Excelente desempeño general! Sigue manteniendo este nivel.";
     
     const tips = {
-      pedagogia: "Podrías reforzar tus técnicas de enseñanza lúdica.",
-      anatomia: "Repasar la biomecánica del movimiento te ayudaría en las evaluaciones.",
-      planificacion: "Organizar mejor los microciclos optimizará el rendimiento de tus alumnos.",
-      primerosAuxilios: "Es vital mantenerte actualizado en protocolos de RCP y trauma.",
-      liderazgoEquipo: "Fomentar la comunicación asertiva mejorará la cohesión del grupo.",
-      evaluacionFisica: "Usar más tests estandarizados daría mayor rigor a tus mediciones.",
-      eticaDeportiva: "Recuerda siempre vincular los valores olímpicos en tus sesiones."
+      comunicacion: "Intenta participar más en debates y ejercicios de oratoria.",
+      liderazgo: "Asumir la capitanía en pequeños retos fortalecerá tu liderazgo.",
+      adaptabilidad: "Prueba cambiar tus rutinas de entrenamiento para mejorar tu flexibilidad mental.",
+      gestionDeportiva: "Leer sobre administración de clubes te daría una ventaja competitiva.",
+      trabajoEquipo: "Fomenta la confianza delegando tareas importantes a tus compañeros."
     };
     return tips[weakest.subject] || "Sigue trabajando en tus habilidades.";
   };
@@ -138,7 +134,10 @@ export default function Dashboard() {
               Universidad: <span className="text-primary">{user?.universidad || "No definida"}</span>
             </p>
             <div className="flex gap-4 no-print">
-              <button className="bg-primary text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:translate-y-[-2px] transition-all">
+              <button 
+                onClick={() => navigate("/profile")}
+                className="bg-primary text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:translate-y-[-2px] transition-all"
+              >
                 Ver Mi Perfil
               </button>
               <button onClick={handleDownloadPDF} className="bg-gray-100 text-gray-600 px-8 py-3 rounded-2xl font-bold hover:bg-gray-200 transition-all">

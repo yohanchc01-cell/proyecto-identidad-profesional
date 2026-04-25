@@ -15,4 +15,22 @@ router.get("/:userId", async (req, res) => {
   res.json(courses);
 });
 
+// obtener detalle de un curso
+router.get("/detail/:id", async (req, res) => {
+  const course = await Course.findById(req.params.id);
+  res.json(course);
+});
+
+// editar curso (activar/finalizar/renombrar)
+router.put("/:id", async (req, res) => {
+  const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(course);
+});
+
+// eliminar curso
+router.delete("/:id", async (req, res) => {
+  await Course.findByIdAndDelete(req.params.id);
+  res.json({ message: "Curso eliminado ✅" });
+});
+
 module.exports = router;

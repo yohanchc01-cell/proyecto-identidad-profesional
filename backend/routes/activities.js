@@ -3,14 +3,14 @@ const Skill = require("../models/Skill");
 // 🔹 Función para recalcular habilidades
 const updateSkills = async (userId) => {
   const activities = await Activity.find({ userId });
-  const skillsList = ["pedagogia", "anatomia", "planificacion", "primerosAuxilios", "liderazgoEquipo", "evaluacionFisica", "eticaDeportiva"];
+  const skillsList = ["comunicacion", "liderazgo", "adaptabilidad", "gestionDeportiva", "trabajoEquipo"];
   
   const scores = {};
   skillsList.forEach(s => scores[s] = []);
 
   activities.forEach(a => {
     a.habilidades?.forEach(h => {
-      if (scores[h]) scores[h].push(a.calificacion);
+      if (scores[h]) scores[h].push(Number(a.calificacion));
     });
   });
 
