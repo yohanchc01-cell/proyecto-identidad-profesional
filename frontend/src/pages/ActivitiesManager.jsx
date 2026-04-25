@@ -7,6 +7,7 @@ export default function ActivitiesManager() {
   const [courses, setCourses] = useState([]);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState({ id: null, seconds: 0 });
   
   const [formData, setFormData] = useState({
     nombre: "",
@@ -76,8 +77,22 @@ export default function ActivitiesManager() {
   };
 
   const deleteActivity = async (id) => {
-    if (!window.confirm("¿Estás seguro de eliminar esta evidencia?")) return;
+    if (confirmDelete.id !== id) {
+      setConfirmDelete({ id, seconds: 4 });
+      const timer = setInterval(() => {
+        setConfirmDelete(prev => {
+          if (prev.seconds <= 1) {
+            clearInterval(timer);
+            return { id: null, seconds: 0 };
+          }
+          return { ...prev, seconds: prev.seconds - 1 };
+        });
+      }, 1000);
+      return;
+    }
+    
     await axios.delete(`${API_URL}/activities/${id}`);
+    setConfirmDelete({ id: null, seconds: 0 });
     fetchData();
   };
 
@@ -157,9 +172,14 @@ export default function ActivitiesManager() {
               <h3 className="font-bold text-gray-800">{a.nombre}</h3>
               <p className="text-xs text-gray-400">Calificación: {a.calificacion} • {a.habilidades?.length} habilidades</p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               {a.pdfUrl && <a href={a.pdfUrl} target="_blank" className="text-primary text-sm font-bold">Ver PDF</a>}
-              <button onClick={() => deleteActivity(a._id)} className="text-red-400 hover:text-red-600 text-sm font-bold">Eliminar</button>
+              <button 
+                onClick={() => deleteActivity(a._id)} 
+                className={`text-sm font-bold transition-all duration-300 ${confirmDelete.id === a._id ? 'bg-red-500 text-white px-4 py-2 rounded-xl shadow-lg scale-105' : 'text-red-400 hover:text-red-600'}`}
+              >
+                {confirmDelete.id === a._id ? `¿Borrar? (${confirmDelete.seconds}s)` : 'Eliminar'}
+              </button>
             </div>
           </div>
         ))}
