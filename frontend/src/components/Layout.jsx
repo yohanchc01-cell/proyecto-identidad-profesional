@@ -18,9 +18,7 @@ const Layout = ({ children }) => {
           </div>
           
           <div className="flex items-center gap-4">
-            <button className="bg-primary text-white px-6 py-3 rounded-full font-semibold shadow-medium hover:bg-primary/90 transition-all">
-              + Nueva Actividad
-            </button>
+            {/* Espacio para acciones futuras */}
           </div>
         </header>
         
