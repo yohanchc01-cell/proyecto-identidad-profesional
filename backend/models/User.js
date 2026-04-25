@@ -6,15 +6,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   universidad: String,
-  carrera: String,
-  activo: {
-    type: Boolean,
-    default: false
-  },
-  role: {
-    type: String,
-    default: "estudiante"
-  }
-}, { strict: false });
+  carrera: String
+});
 
 module.exports = mongoose.model("User", userSchema);

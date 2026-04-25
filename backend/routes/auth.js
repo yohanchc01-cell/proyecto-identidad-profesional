@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 });
 
 router.post("/register", async (req, res) => {
-  const { documento, nombre, email, password, role, universidad, carrera } = req.body;
+  const { documento, nombre, email, password, universidad, carrera } = req.body;
 
   try {
     const hash = await bcrypt.hash(password, 10);
@@ -28,45 +28,30 @@ router.post("/register", async (req, res) => {
       email,
       password: hash,
       universidad,
-      carrera,
-      role: role || "estudiante",
-      activo: false // Requiere activación
+      carrera
     });
 
-    // Envío de correo (Simulado/Base)
-    const url = `http://localhost:3000/api/auth/activate/${user._id}`;
-    await transporter.sendMail({
-      from: '"Portafolio Inteligente" <noreply@portafolio.com>',
-      to: email,
-      subject: "Activa tu cuenta de Portafolio",
-      html: `<h1>Hola ${nombre}</h1><p>Haz clic <a href="${url}">aquí</a> para activar tu cuenta y empezar tu portafolio de Educación Física.</p>`
-    });
-
-    res.json({ message: "Usuario registrado. Revisa tu correo para activar la cuenta. ✅", user });
+    res.json({ message: "Usuario registrado con éxito ✅", user });
   } catch (error) {
     res.status(500).json({ error: "Error al registrar" });
   }
 });
 
-router.get("/activate/:id", async (req, res) => {
-  try {
-    await User.findByIdAndUpdate(req.params.id, { activo: true });
-    res.send("<h1>Cuenta activada ✅</h1><p>Ya puedes iniciar sesión en la aplicación.</p>");
-  } catch (error) {
-    res.status(500).send("Error al activar");
-  }
+// RUTA TEMPORAL PARA LIMPIAR LA BASE DE DATOS
+router.get("/nuke", async (req, res) => {
+  await User.deleteMany({});
+  res.send("<h1>Base de datos de usuarios LIMPIA 🧼</h1>");
 });
 
 router.post("/login", async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) return res.status(404).json("Usuario no existe");
-  if (!user.activo) return res.status(401).json("Cuenta no activada. Revisa tu correo. 📧");
 
   const valid = await bcrypt.compare(req.body.password, user.password);
   if (!valid) return res.status(400).json("Contraseña incorrecta");
 
-  const token = jwt.sign({ id: user._id, role: user.role }, "secret");
+  const token = jwt.sign({ id: user._id }, "secret");
 
   res.json({
     token,
@@ -74,7 +59,6 @@ router.post("/login", async (req, res) => {
       _id: user._id,
       nombre: user.nombre,
       email: user.email,
-      role: user.role,
       universidad: user.universidad,
       carrera: user.carrera
     }
@@ -82,7 +66,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/students", async (req, res) => {
-  const students = await User.find({ role: "estudiante" });
+  const students = await User.find({});
   res.json(students);
 });
 
@@ -91,10 +75,8 @@ router.delete("/user/:id", async (req, res) => {
   res.json({ message: "Usuario eliminado ✅" });
 });
 
-// Actualización de usuario (Consolidada)
 router.put("/user/:id", async (req, res) => {
-  const { nombre, email, role, documento, universidad, carrera } = req.body;
-  console.log("Petición update recibida para:", req.params.id, req.body);
+  const { nombre, email, documento, universidad, carrera } = req.body;
   
   try {
     const user = await User.findById(req.params.id);
@@ -102,22 +84,14 @@ router.put("/user/:id", async (req, res) => {
 
     user.nombre = nombre || user.nombre;
     user.email = email || user.email;
-    user.role = role || user.role;
     user.documento = documento || user.documento;
     user.universidad = universidad || user.universidad;
     user.carrera = carrera || user.carrera;
 
     await user.save();
     
-    console.log("DATOS GUARDADOS EN DB ✅", { 
-      id: user._id, 
-      nombre: user.nombre,
-      universidad: user.universidad,
-      carrera: user.carrera 
-    });
     res.json(user);
   } catch (error) {
-    console.error("ERROR CRÍTICO AL GUARDAR:", error);
     res.status(500).json("Error interno del servidor");
   }
 });
