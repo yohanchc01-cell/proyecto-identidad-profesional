@@ -87,6 +87,8 @@ export default function Dashboard() {
       setForm({ nombre: "", calificacion: "", habilidades: [] });
       setFile(null);
       fetchActivities();
+      // Notificar a la barra lateral para actualizar los gráficos
+      window.dispatchEvent(new CustomEvent("activityUpdated"));
     } catch (e) {
       alert("❌ Error al subir");
     }
@@ -99,41 +101,6 @@ export default function Dashboard() {
     { id: "gestionDeportiva", name: "Gestión Deportiva" },
     { id: "trabajoEquipo", name: "Trabajo en equipo" },
   ];
-
-  const calculateRadarData = () => {
-    const map = {};
-    skillsList.forEach(s => map[s.id] = []);
-    
-    activities.forEach(a => {
-      a.habilidades?.forEach(h => {
-        if (map[h]) map[h].push(Number(a.calificacion || 0));
-      });
-    });
-
-    return skillsList.map(s => ({
-      subject: s.id,
-      value: map[s.id].length ? map[s.id].reduce((a, b) => a + b, 0) / map[s.id].length : 0
-    }));
-  };
-
-  const radarData = calculateRadarData();
-
-  // 🔥 Sistema de Recomendaciones
-  const getRecommendation = () => {
-    const sorted = [...radarData].sort((a, b) => a.value - b.value);
-    const weakest = sorted[0];
-    if (!weakest || weakest.value === 0) return "¡Comienza a registrar actividades para ver recomendaciones!";
-    if (weakest.value > 4) return "¡Excelente desempeño general! Sigue manteniendo este nivel.";
-    
-    const tips = {
-      comunicacion: "Intenta participar más en debates y ejercicios de oratoria.",
-      liderazgo: "Asumir la capitanía en pequeños retos fortalecerá tu liderazgo.",
-      adaptabilidad: "Prueba cambiar tus rutinas de entrenamiento para mejorar tu flexibilidad mental.",
-      gestionDeportiva: "Leer sobre administración de clubes te daría una ventaja competitiva.",
-      trabajoEquipo: "Fomenta la confianza delegando tareas importantes a tus compañeros."
-    };
-    return tips[weakest.subject] || "Sigue trabajando en tus habilidades.";
-  };
 
   const handleDownloadPDF = () => {
     window.print(); // Solución rápida y efectiva que respeta el nuevo Layout
@@ -205,10 +172,9 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Bottom Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+      <div className="grid grid-cols-1 gap-8 mb-10">
         {/* Formulario Nueva Actividad */}
-        <div className="lg:col-span-2 bg-white p-8 rounded-3xl shadow-soft no-print">
+        <div className="bg-white p-8 rounded-3xl shadow-soft no-print">
           <h2 className="text-2xl font-bold mb-6">Registrar Actividad</h2>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <input
@@ -261,30 +227,6 @@ export default function Dashboard() {
           <div className="flex items-center gap-4">
             <input type="file" onChange={e => setFile(e.target.files[0])} className="flex-1 text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-primary hover:file:bg-indigo-100 transition-all"/>
             <button onClick={uploadActivity} className="bg-primary text-white px-10 py-4 rounded-2xl font-bold shadow-lg">Guardar Actividad</button>
-          </div>
-        </div>
-
-        {/* Resumen de Estadísticas / Radar */}
-        <div className="bg-white p-8 rounded-3xl shadow-soft flex flex-col items-center">
-          <h2 className="text-xl font-bold mb-6 text-center">Competencias Dominadas</h2>
-          <RadarChartComponent data={radarData} />
-          
-          <div className="mt-6 p-4 bg-indigo-50 rounded-2xl border border-indigo-100 w-full">
-            <h4 className="text-primary font-bold text-xs uppercase mb-1">💡 Recomendación Inteligente</h4>
-            <p className="text-gray-700 text-sm italic">"{getRecommendation()}"</p>
-          </div>
-
-          <div className="w-full mt-8 space-y-4">
-            {radarData.length > 0 ? radarData.slice(0, 3).map((s, i) => {
-              const skillInfo = skillsList.find(sl => sl.id === s.subject);
-              if (!skillInfo) return null;
-              return (
-                <div key={s.subject} className="flex justify-between items-center text-sm p-3 bg-gray-50 rounded-xl">
-                  <span className="font-medium text-gray-600">{skillInfo.name}</span>
-                  <span className="font-bold text-primary">{(s.value).toFixed(1)}/5.0</span>
-                </div>
-              );
-            }) : <p className="text-gray-400 text-xs italic">No hay datos suficientes</p>}
           </div>
         </div>
       </div>

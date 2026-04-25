@@ -85,6 +85,7 @@ export default function ActivitiesManager() {
     setFormData({ nombre: "", cursoId: "", habilidades: [], calificacion: "", pdfUrl: "" });
     fetchData();
     alert("Actividad creada ✅");
+    window.dispatchEvent(new CustomEvent("activityUpdated"));
   };
 
   const deleteActivity = async (id) => {
@@ -105,6 +106,7 @@ export default function ActivitiesManager() {
     await axios.delete(`${API_URL}/activities/${id}`);
     setConfirmDelete({ id: null, seconds: 0 });
     fetchData();
+    window.dispatchEvent(new CustomEvent("activityUpdated"));
   };
 
   return (

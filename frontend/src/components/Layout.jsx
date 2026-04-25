@@ -1,5 +1,6 @@
 import React from "react";
 import Sidebar from "./Sidebar";
+import CompetencySidebar from "./CompetencySidebar";
 
 const Layout = ({ children }) => {
   return (
@@ -26,8 +27,8 @@ const Layout = ({ children }) => {
         {children}
       </main>
 
-      {/* Right Sidebar Placeholder (can be a component later) */}
-      <aside className="w-80 bg-white border-l p-8 hidden xl:flex flex-col h-screen sticky top-0">
+      {/* Right Sidebar */}
+      <aside className="w-80 bg-white border-l p-8 hidden xl:flex flex-col h-screen sticky top-0 overflow-y-auto">
         <div className="flex items-center gap-3 mb-10 justify-end">
           <div className="flex items-center gap-2 bg-gray-100 p-2 pr-4 rounded-2xl hover:bg-gray-200 transition-all cursor-pointer group" onClick={() => { localStorage.clear(); window.location.href="/login"; }}>
             <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center font-bold text-primary group-hover:bg-primary group-hover:text-white transition-all">JD</div>
@@ -38,13 +39,7 @@ const Layout = ({ children }) => {
           </div>
         </div>
 
-        <div className="flex-1">
-          <h3 className="font-bold mb-6">Mapa de Competencias</h3>
-          {/* Radar icon/chart placeholder */}
-          <div className="aspect-square bg-gray-50 rounded-3xl border border-dashed border-gray-200 flex items-center justify-center text-gray-400 text-sm italic">
-            Radar Chart
-          </div>
-        </div>
+        <CompetencySidebar />
       </aside>
     </div>
   );

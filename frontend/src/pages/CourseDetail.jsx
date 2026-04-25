@@ -53,6 +53,7 @@ export default function CourseDetail() {
     await axios.delete(`${API_URL}/activities/${activityId}`);
     setConfirmDelete({ id: null, seconds: 0 });
     fetchActivities();
+    window.dispatchEvent(new CustomEvent("activityUpdated"));
   };
 
   return (
