@@ -29,7 +29,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log("Error Mongo ❌", err));
 
 app.get("/", (req, res) => {
-  res.send("API funcionando 🚀");
+  res.send("API v2 ACTIVE 🚀⚡");
 });
 
 app.listen(3000, () => {
