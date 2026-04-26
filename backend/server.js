@@ -7,6 +7,7 @@ const assignmentRoutes = require("./routes/assignments");
 const courseRoutes = require("./routes/courses");
 const activityRoutes = require("./routes/activities");
 const uploadRoutes = require("./routes/upload");
+const fileRoutes = require("./routes/files");
 const Activity = require("./models/Activity");
 const Course = require("./models/Course");
 
@@ -22,6 +23,7 @@ app.use("/api/assignments", assignmentRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/activities", activityRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/files", fileRoutes);
 
 // ⚡ Ping endpoint — respuesta instantánea para keepalive (sin BD)
 app.get("/ping", (req, res) => res.json({ status: "ok", ts: Date.now() }));
