@@ -228,14 +228,19 @@ export default function ActivitiesManager() {
       </form>
 
       <div className="space-y-4">
-        {activities.map(a => (
+        {activities.map(a => {
+          // Cloudinary altera los headers del PDF en modo free auto, lo que rompe el visor web de Chrome. 
+          // Agregando fl_attachment forzamos a que el navegador lo descargue puro y limpio.
+          const safePdfUrl = a.pdfUrl ? a.pdfUrl.replace("/upload/", "/upload/fl_attachment/") : null;
+
+          return (
           <div key={a._id} className="bg-white p-5 md:p-6 rounded-3xl shadow-soft flex flex-col md:flex-row justify-between md:items-center border border-transparent hover:border-indigo-100 transition-all gap-4">
             <div>
               <h3 className="font-bold text-gray-800 text-sm md:text-base leading-tight">{a.nombre}</h3>
               <p className="text-[10px] md:text-xs text-gray-400 mt-1">Calificación: {a.calificacion} • {a.habilidades?.length} habilidades</p>
             </div>
             <div className="flex flex-wrap gap-3 items-center justify-between md:justify-end border-t md:border-none pt-3 md:pt-0">
-              {a.pdfUrl && <a href={a.pdfUrl} target="_blank" className="bg-indigo-50 text-white md:text-primary bg-primary md:bg-indigo-50 px-3 py-2 md:py-1 rounded-lg text-[10px] font-bold hover:bg-indigo-100 transition-all">Ver PDF</a>}
+              {safePdfUrl && <a href={safePdfUrl} target="_blank" className="bg-indigo-50 text-white md:text-primary bg-primary md:bg-indigo-50 px-3 py-2 md:py-1 rounded-lg text-[10px] font-bold hover:bg-indigo-100 transition-all">Ver PDF</a>}
               <div className="flex gap-4 items-center">
                 <button 
                   onClick={() => handleEdit(a)}
@@ -252,7 +257,8 @@ export default function ActivitiesManager() {
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </Layout>
   );
