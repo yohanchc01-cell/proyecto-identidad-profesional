@@ -21,22 +21,35 @@ export default function Dashboard() {
     habilidades: []
   });
 
-  const API_URL = "https://proyecto-identidad-profesional.onrender.com/api";
+  const BASE_URL = "https://proyecto-identidad-profesional.onrender.com";
+  const API_URL = `${BASE_URL}/api`;
 
-  const fetchActivities = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/activities/user/${user._id}`);
-      setActivities(res.data);
-      setActivitiesLoaded(true);
-    } catch (error) {
-      console.log("Error actividades", error);
-      setActivitiesLoaded(true);
-    }
+  // ⚡ Despertar el servidor antes de que el usuario lo necesite
+  const warmupServer = () => {
+    axios.get(`${BASE_URL}/ping`).catch(() => {});
   };
 
-  const fetchCourses = async () => {
-    const res = await axios.get(`${API_URL}/courses/${user._id}`);
-    setCourses(res.data);
+  const fetchDashboard = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/dashboard/${user._id}`);
+      setCourses(res.data.courses);
+      setActivities(res.data.activities);
+      setActivitiesLoaded(true);
+    } catch (error) {
+      console.log("Error dashboard", error);
+      // Fallback: intentar cargar por separado
+      try {
+        const [coursesRes, activitiesRes] = await Promise.all([
+          axios.get(`${API_URL}/courses/${user._id}`),
+          axios.get(`${API_URL}/activities/user/${user._id}`)
+        ]);
+        setCourses(coursesRes.data);
+        setActivities(activitiesRes.data);
+      } catch (e) {
+        console.log("Error fallback", e);
+      }
+      setActivitiesLoaded(true);
+    }
   };
 
   const [userData, setUserData] = useState(user);
@@ -76,8 +89,8 @@ export default function Dashboard() {
       navigate("/login");
       return;
     }
-    fetchCourses();
-    fetchActivities();
+    warmupServer();      // pings el servidor inmediatamente
+    fetchDashboard();    // una sola llamada con todo
     fetchUser();
   }, []);
 
@@ -129,6 +142,11 @@ export default function Dashboard() {
   const colors = ["bg-folder-red", "bg-folder-blue", "bg-folder-orange", "bg-folder-green"];
 
   const getCourseAverage = (courseId) => {
+    // Primero revisar si el servidor ya calculó el promedio
+    const course = courses.find(c => c._id === courseId || c._id?.toString() === String(courseId));
+    if (course?.promedio != null) return course.promedio;
+
+    // Fallback: calcular en cliente
     if (!courseId || activities.length === 0) return "S/N";
     const courseActivities = activities.filter(a => {
       const actCursoId = a.cursoId?._id ? a.cursoId._id.toString() : String(a.cursoId || "");
