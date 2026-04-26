@@ -29,35 +29,29 @@
 }
 
 /* 🌙 MOTOR AUTOMÁTICO DE MODO OSCURO PARA TARJETAS */
-.dark .bg-white {
+.dark .bg-white, .dark .bg-gray-50, .dark .bg-gray-100 {
   background-color: #111827 !important;
   color: #f3f4f6 !important;
   border-color: #1f2937 !important;
 }
 
-.dark .bg-gray-50 {
-  background-color: #1f2937 !important;
-  border-color: #374151 !important;
-  color: #e5e7eb !important;
-}
-
 .dark .text-gray-800, .dark .text-gray-900 {
-  color: #f9fafb !important;
+  color: #ffffff;
 }
 
 .dark .text-gray-600, .dark .text-gray-700 {
-  color: #d1d5db !important;
+  color: #e5e7eb;
 }
 
 .dark .text-gray-500 {
-  color: #9ca3af !important;
+  color: #9ca3af;
 }
 
 .dark .border-indigo-50, .dark .border-gray-100, .dark .border-gray-200 {
   border-color: #374151 !important;
 }
 
-.dark .bg-indigo-50 {
+.dark .bg-indigo-50, .dark .bg-indigo-100 {
   background-color: #1e1b4b !important;
   border-color: #312e81 !important;
 }
