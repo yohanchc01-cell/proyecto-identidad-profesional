@@ -116,9 +116,11 @@ export default function CompetencySidebar() {
           return (
             <div key={s.subject} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-transparent hover:border-indigo-100 transition-all">
               <span className="text-[11px] font-bold text-gray-600">{shortNames[s.subject]}</span>
-              <span className="text-xs font-black text-primary">
-                {loading ? "..." : (s.value).toFixed(1)}
-              </span>
+              {loading ? (
+                <div className="h-4 w-8 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-md"></div>
+              ) : (
+                <span className="text-xs font-black text-primary">{(s.value).toFixed(1)}</span>
+              )}
             </div>
           );
         })}

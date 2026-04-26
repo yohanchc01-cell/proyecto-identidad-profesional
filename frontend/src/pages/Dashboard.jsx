@@ -242,22 +242,22 @@ export default function Dashboard() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="bg-white p-6 rounded-3xl shadow-soft border-b-4 border-primary">
                 <p className="text-gray-400 text-[10px] font-bold uppercase mb-1">Promedio General</p>
-                <h4 className="text-3xl font-black text-gray-800">{activitiesLoaded ? dashboardStats.avg : "..."}</h4>
+                {activitiesLoaded ? <h4 className="text-3xl font-black text-gray-800 dark:text-white">{dashboardStats.avg}</h4> : <div className="h-9 w-16 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg mt-1 mb-1"></div>}
                 <div className="mt-2 text-[10px] text-green-500 font-bold bg-green-50 px-2 py-1 rounded-lg w-fit">Desempeño Óptimo</div>
               </div>
               <div className="bg-white p-6 rounded-3xl shadow-soft border-b-4 border-folder-blue">
                 <p className="text-gray-400 text-[10px] font-bold uppercase mb-1">Evidencias Cargadas</p>
-                <h4 className="text-3xl font-black text-gray-800">{activitiesLoaded ? dashboardStats.total : "..."}</h4>
+                {activitiesLoaded ? <h4 className="text-3xl font-black text-gray-800 dark:text-white">{dashboardStats.total}</h4> : <div className="h-9 w-12 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg mt-1 mb-1"></div>}
                 <div className="mt-2 text-[10px] text-indigo-500 font-bold bg-indigo-50 px-2 py-1 rounded-lg w-fit">Progreso Registrado</div>
               </div>
               <div className="bg-white p-6 rounded-3xl shadow-soft border-b-4 border-folder-orange">
                 <p className="text-gray-400 text-[10px] font-bold uppercase mb-1">Cursos Activos</p>
-                <h4 className="text-3xl font-black text-gray-800">{activitiesLoaded ? dashboardStats.courses : "..."}</h4>
+                {activitiesLoaded ? <h4 className="text-3xl font-black text-gray-800 dark:text-white">{dashboardStats.courses}</h4> : <div className="h-9 w-12 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg mt-1 mb-1"></div>}
                 <div className="mt-2 text-[10px] text-orange-500 font-bold bg-orange-50 px-2 py-1 rounded-lg w-fit">Materias en Curso</div>
               </div>
               <div className="bg-white p-6 rounded-3xl shadow-soft border-b-4 border-folder-green">
                 <p className="text-gray-400 text-[10px] font-bold uppercase mb-1">Fortaleza Principal</p>
-                <h4 className="text-sm font-black text-gray-800 uppercase truncate">{activitiesLoaded ? (dashboardStats.topSkill !== 'N/A' ? (skillsList.find(s => s.id === dashboardStats.topSkill)?.name.split(' ')[0]) : 'S/N') : "..."}</h4>
+                {activitiesLoaded ? <h4 className="text-sm md:text-base font-black text-gray-800 dark:text-white uppercase truncate mt-2 mb-[14px]">{(dashboardStats.topSkill !== 'N/A' ? (skillsList.find(s => s.id === dashboardStats.topSkill)?.name.split(' ')[0]) : 'S/N')}</h4> : <div className="h-6 w-24 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg mt-2 mb-3"></div>}
                 <div className="mt-2 text-[10px] text-green-600 font-bold bg-green-50 px-2 py-1 rounded-lg w-fit">Punta de Lanza</div>
               </div>
             </div>
