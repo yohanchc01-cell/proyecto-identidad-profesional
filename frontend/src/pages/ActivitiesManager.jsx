@@ -145,9 +145,9 @@ export default function ActivitiesManager() {
 
   return (
     <Layout>
-      <h1 className="text-3xl font-bold text-primary-dark mb-6">Mis Actividades y Evidencias</h1>
+      <h1 className="text-2xl md:text-3xl font-bold text-primary-dark mb-6">Mis Actividades</h1>
 
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-3xl shadow-soft mb-10 space-y-6 border-2 border-transparent transition-all" style={editingId ? { borderColor: '#5D5FEF' } : {}}>
+      <form onSubmit={handleSubmit} className="bg-white p-5 md:p-8 rounded-3xl shadow-soft mb-10 space-y-6 border-2 border-transparent transition-all" style={editingId ? { borderColor: '#5D5FEF' } : {}}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-gray-800">{editingId ? "✏️ Editando Actividad" : "📝 Registrar Nueva Actividad"}</h2>
           {editingId && (
@@ -229,25 +229,27 @@ export default function ActivitiesManager() {
 
       <div className="space-y-4">
         {activities.map(a => (
-          <div key={a._id} className="bg-white p-6 rounded-3xl shadow-soft flex justify-between items-center border border-transparent hover:border-indigo-100 transition-all">
+          <div key={a._id} className="bg-white p-5 md:p-6 rounded-3xl shadow-soft flex flex-col md:flex-row justify-between md:items-center border border-transparent hover:border-indigo-100 transition-all gap-4">
             <div>
-              <h3 className="font-bold text-gray-800">{a.nombre}</h3>
-              <p className="text-xs text-gray-400">Calificación: {a.calificacion} • {a.habilidades?.length} habilidades</p>
+              <h3 className="font-bold text-gray-800 text-sm md:text-base leading-tight">{a.nombre}</h3>
+              <p className="text-[10px] md:text-xs text-gray-400 mt-1">Calificación: {a.calificacion} • {a.habilidades?.length} habilidades</p>
             </div>
-            <div className="flex gap-4 items-center">
-              {a.pdfUrl && <a href={a.pdfUrl} target="_blank" className="bg-indigo-50 text-primary px-3 py-1 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-all">Ver PDF</a>}
-              <button 
-                onClick={() => handleEdit(a)}
-                className="text-gray-400 hover:text-primary transition-all text-sm font-bold"
-              >
-                Editar
-              </button>
-              <button 
-                onClick={() => deleteActivity(a._id)} 
-                className={`text-sm font-bold transition-all duration-300 ${confirmDelete.id === a._id ? 'bg-red-500 text-white px-4 py-2 rounded-xl shadow-lg scale-105' : 'text-red-400 hover:text-red-600'}`}
-              >
-                {confirmDelete.id === a._id ? `¿Borrar? (${confirmDelete.seconds}s)` : 'Eliminar'}
-              </button>
+            <div className="flex flex-wrap gap-3 items-center justify-between md:justify-end border-t md:border-none pt-3 md:pt-0">
+              {a.pdfUrl && <a href={a.pdfUrl} target="_blank" className="bg-indigo-50 text-white md:text-primary bg-primary md:bg-indigo-50 px-3 py-2 md:py-1 rounded-lg text-[10px] font-bold hover:bg-indigo-100 transition-all">Ver PDF</a>}
+              <div className="flex gap-4 items-center">
+                <button 
+                  onClick={() => handleEdit(a)}
+                  className="text-gray-400 hover:text-primary transition-all text-[11px] font-bold uppercase tracking-wider"
+                >
+                  Editar
+                </button>
+                <button 
+                  onClick={() => deleteActivity(a._id)} 
+                  className={`text-[11px] font-bold transition-all duration-300 uppercase tracking-wider ${confirmDelete.id === a._id ? 'bg-red-500 text-white px-3 py-1 rounded-lg shadow-md' : 'text-red-400 hover:text-red-600'}`}
+                >
+                  {confirmDelete.id === a._id ? `¿Borrar? (${confirmDelete.seconds}s)` : 'Eliminar'}
+                </button>
+              </div>
             </div>
           </div>
         ))}

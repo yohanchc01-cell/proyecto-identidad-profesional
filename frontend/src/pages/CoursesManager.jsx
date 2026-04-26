@@ -53,35 +53,35 @@ export default function CoursesManager() {
 
   return (
     <Layout>
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold text-primary-dark mb-2">Gestión de Cursos</h1>
-        <p className="text-gray-500">Organiza tus materias y ciclos académicos.</p>
+      <div className="mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-primary-dark mb-1">Gestión de Cursos</h1>
+        <p className="text-sm text-gray-500 font-medium tracking-tight">Organiza tus materias y ciclos académicos.</p>
       </div>
 
-      <div className="bg-white p-6 rounded-3xl shadow-soft mb-10 flex gap-4">
+      <div className="bg-white p-5 md:p-6 rounded-3xl shadow-soft mb-10 flex flex-col sm:flex-row gap-4">
         <input 
-          className="flex-1 bg-gray-50 border-none p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary"
-          placeholder="Nombre de la nueva materia / curso"
+          className="flex-1 bg-gray-50 border-none p-4 rounded-2xl outline-none focus:ring-2 focus:ring-primary text-sm font-medium"
+          placeholder="Nombre de la nueva materia"
           value={newCourse}
           onChange={e => setNewCourse(e.target.value)}
         />
-        <button onClick={createCourse} className="bg-primary text-white px-8 py-4 rounded-2xl font-bold shadow-lg">Crear Curso</button>
+        <button onClick={createCourse} className="bg-primary text-white p-4 rounded-2xl font-bold shadow-lg text-sm sm:px-8">Añadir Curso</button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {courses.map(course => (
-          <div key={course._id} className="bg-white p-6 rounded-3xl shadow-soft border border-indigo-50 flex justify-between items-center">
+          <div key={course._id} className="bg-white p-5 md:p-6 rounded-3xl shadow-soft border border-indigo-50 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <div>
-              <h3 className="text-xl font-bold text-gray-800">{course.nombre}</h3>
-              <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-md ${(!course.estado || course.estado === 'activo') ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
+              <h3 className="text-base md:text-lg font-bold text-gray-800 leading-tight">{course.nombre}</h3>
+              <span className={`text-[10px] uppercase font-bold px-2 py-1 rounded-md inline-block mt-2 ${(!course.estado || course.estado === 'activo') ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
                 {(!course.estado || course.estado === 'activo') ? 'Activo' : 'Finalizado'}
               </span>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4 items-center justify-between sm:justify-end border-t sm:border-none pt-3 sm:pt-0">
               <button 
                 disabled={!course.estado || course.estado === 'activo'}
                 onClick={() => setStatus(course._id, 'activo')} 
-                className={`text-sm font-bold ${(!course.estado || course.estado === 'activo') ? 'text-gray-300 cursor-not-allowed' : 'text-primary hover:underline'}`}
+                className={`text-[11px] font-bold uppercase tracking-wider ${(!course.estado || course.estado === 'activo') ? 'text-gray-300 cursor-not-allowed' : 'text-primary hover:underline'}`}
               >
                 Activar
               </button>
@@ -89,16 +89,16 @@ export default function CoursesManager() {
               <button 
                 disabled={course.estado === 'finalizado'}
                 onClick={() => setStatus(course._id, 'finalizado')} 
-                className={`text-sm font-bold ${(course.estado === 'finalizado') ? 'text-gray-300 cursor-not-allowed' : 'text-orange-500 hover:underline'}`}
+                className={`text-[11px] font-bold uppercase tracking-wider ${(course.estado === 'finalizado') ? 'text-gray-300 cursor-not-allowed' : 'text-orange-500 hover:underline'}`}
               >
-                Finalizar
+                Cerrar
               </button>
               
               <button 
                 onClick={() => deleteCourse(course._id)} 
-                className={`text-xs font-bold transition-all duration-300 ${confirmDelete.id === course._id ? 'bg-red-500 text-white px-4 py-2 rounded-xl shadow-lg scale-105' : 'text-red-300 hover:text-red-500'}`}
+                className={`text-[10px] font-bold transition-all duration-300 uppercase tracking-wider ${confirmDelete.id === course._id ? 'bg-red-500 text-white px-3 py-1 rounded-lg shadow-md' : 'text-red-300 hover:text-red-500'}`}
               >
-                {confirmDelete.id === course._id ? `¿Confirmar? (${confirmDelete.seconds}s)` : 'Eliminar'}
+                {confirmDelete.id === course._id ? `¿Borrar? (${confirmDelete.seconds}s)` : 'Eliminar'}
               </button>
             </div>
           </div>

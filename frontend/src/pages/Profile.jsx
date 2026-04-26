@@ -47,10 +47,10 @@ export default function Profile() {
   return (
     <Layout>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-primary-dark mb-2">Mi Perfil Profesional</h1>
-        <p className="text-gray-500 mb-10">Mantén tu información académica actualizada para tu portafolio.</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-primary-dark mb-2">Mi Perfil</h1>
+        <p className="text-sm text-gray-500 mb-8 font-medium">Mantén tu información académica actualizada.</p>
 
-        <form onSubmit={handleUpdate} className="bg-white p-8 rounded-3xl shadow-soft space-y-6">
+        <form onSubmit={handleUpdate} className="bg-white p-6 md:p-8 rounded-3xl shadow-soft space-y-6">
           <div className="flex flex-col items-center mb-8">
             <div className="relative w-32 h-32 mb-4 group">
               <div className="w-full h-full rounded-full bg-gray-100 overflow-hidden border-4 border-indigo-50 shadow-inner flex items-center justify-center">
