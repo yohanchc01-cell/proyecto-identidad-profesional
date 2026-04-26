@@ -5,6 +5,7 @@ import RadarChartComponent from "./RadarChart";
 export default function CompetencySidebar() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
   const API_URL = "https://proyecto-identidad-profesional.onrender.com/api";
 
   const skillsList = [
@@ -17,11 +18,14 @@ export default function CompetencySidebar() {
 
   const fetchActivities = async () => {
     if (!user?._id) return;
+    setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/activities/user/${user._id}`);
       setActivities(res.data);
     } catch (error) {
       console.log("Error sidebar", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,7 +116,9 @@ export default function CompetencySidebar() {
           return (
             <div key={s.subject} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-transparent hover:border-indigo-100 transition-all">
               <span className="text-[11px] font-bold text-gray-600">{shortNames[s.subject]}</span>
-              <span className="text-xs font-black text-primary">{(s.value).toFixed(1)}</span>
+              <span className="text-xs font-black text-primary">
+                {loading ? "..." : (s.value).toFixed(1)}
+              </span>
             </div>
           );
         })}
