@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import RadarChartComponent from "../components/RadarChart";
@@ -135,7 +135,7 @@ export default function Dashboard() {
     return (sum / valid.length).toFixed(1);
   };
 
-  const calculateStats = () => {
+  const dashboardStats = useMemo(() => {
     const radarData = skillsList.map(s => {
       const map = {};
       activities.forEach(a => {
@@ -152,12 +152,11 @@ export default function Dashboard() {
 
     const sorted = [...radarData].sort((a, b) => b.value - a.value);
     const topSkill = sorted[0]?.value > 0 ? sorted[0].subject : "N/A";
-    const avg = activities.length ? (activities.reduce((a, b) => a + Number(b.calificacion || 0), 0) / activities.length).toFixed(1) : "0.0";
+    const valid = activities.filter(a => a.calificacion !== undefined && a.calificacion !== null && a.calificacion !== "");
+    const avg = valid.length ? (valid.reduce((a, b) => a + Number(b.calificacion), 0) / valid.length).toFixed(1) : "0.0";
 
     return { topSkill, avg, total: activities.length, courses: courses.length };
-  };
-
-  const dashboardStats = calculateStats();
+  }, [activities, courses]);
 
   return (
     <Layout>
