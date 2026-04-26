@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
     window.scrollTo(0, 0);
   }, [pathname]);
   return (
-    <div className="flex flex-col xl:flex-row min-h-screen bg-primary-light font-sans text-gray-800">
+    <div className="flex flex-col xl:flex-row min-h-screen bg-primary-light dark:bg-[#0B0F19] font-sans text-gray-800 dark:text-gray-100 transition-colors duration-300">
       <Sidebar />
       
       <main className="flex-1 p-4 md:p-8 overflow-y-auto pb-24 xl:pb-8">
