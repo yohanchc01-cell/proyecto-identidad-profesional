@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [newCourse, setNewCourse] = useState("");
   const [file, setFile] = useState(null);
   const [activities, setActivities] = useState([]);
+  const [activitiesLoaded, setActivitiesLoaded] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
 
   const [form, setForm] = useState({
@@ -26,8 +27,10 @@ export default function Dashboard() {
     try {
       const res = await axios.get(`${API_URL}/activities/user/${user._id}`);
       setActivities(res.data);
+      setActivitiesLoaded(true);
     } catch (error) {
       console.log("Error actividades", error);
+      setActivitiesLoaded(true);
     }
   };
 
@@ -126,10 +129,13 @@ export default function Dashboard() {
   const colors = ["bg-folder-red", "bg-folder-blue", "bg-folder-orange", "bg-folder-green"];
 
   const getCourseAverage = (courseId) => {
-    const id = courseId?.toString();
-    const courseActivities = activities.filter(a => (a.cursoId?._id || a.cursoId)?.toString() === id);
+    if (!courseId || activities.length === 0) return "S/N";
+    const courseActivities = activities.filter(a => {
+      const actCursoId = a.cursoId?._id ? a.cursoId._id.toString() : String(a.cursoId || "");
+      return actCursoId === String(courseId);
+    });
     if (courseActivities.length === 0) return "S/N";
-    const valid = courseActivities.filter(a => a.calificacion !== undefined && a.calificacion !== null && a.calificacion !== "");
+    const valid = courseActivities.filter(a => a.calificacion != null && a.calificacion !== "");
     if (valid.length === 0) return "S/N";
     const sum = valid.reduce((acc, curr) => acc + Number(curr.calificacion), 0);
     return (sum / valid.length).toFixed(1);
@@ -263,7 +269,7 @@ export default function Dashboard() {
                   {["🏀", "⚽", "🧠", "🚑"][idx % 4]}
                 </div>
                 <div className="bg-black/10 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider">
-                  Promedio: {getCourseAverage(course._id)}
+                  {activitiesLoaded ? `Promedio: ${getCourseAverage(course._id)}` : "Cargando..."}
                 </div>
               </div>
               <div className="mt-4">
