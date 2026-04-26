@@ -12,7 +12,7 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 xl:relative xl:w-72 bg-[#0F172A] text-white p-4 xl:p-6 flex flex-row xl:flex-col items-center justify-around xl:justify-start xl:h-screen shadow-2xl z-50 no-print">
+    <div className="fixed bottom-0 left-0 right-0 xl:sticky xl:top-0 xl:w-72 bg-[#0F172A] text-white p-4 xl:p-6 flex flex-row xl:flex-col items-center justify-around xl:justify-start xl:h-screen xl:overflow-y-auto shadow-2xl z-50 no-print">
       <div className="hidden xl:flex items-center gap-3 mb-10 px-2 mt-4">
         <div className="w-10 h-10 bg-[#5D5FEF] rounded-xl flex items-center justify-center font-bold shadow-lg">PI</div>
         <span className="text-xl font-bold tracking-tight">Portafolio</span>
