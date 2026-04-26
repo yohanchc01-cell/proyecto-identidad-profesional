@@ -4,10 +4,11 @@ import CompetencySidebar from "./CompetencySidebar";
 
 const Layout = ({ children }) => {
   return (
-    <div className="flex min-h-screen bg-primary-light font-sans text-gray-800">
+    <div className="flex flex-col xl:flex-row min-h-screen bg-primary-light font-sans text-gray-800">
       <Sidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
-        <header className="flex justify-between items-center mb-10">
+      
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto pb-24 xl:pb-8">
+        <header className="hidden md:flex justify-between items-center mb-10">
           <div className="relative w-96">
             <input
               type="text"
@@ -16,16 +17,26 @@ const Layout = ({ children }) => {
             />
             <span className="absolute left-4 top-4 opacity-40">🔍</span>
           </div>
-          
-          <div className="flex items-center gap-4">
-            {/* Espacio para acciones futuras */}
-          </div>
         </header>
+
+        {/* Mobile Header (Simplified) */}
+        <div className="md:hidden flex justify-between items-center mb-6 mt-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-white text-xs">PI</div>
+            <span className="font-bold text-primary-dark">Portafolio</span>
+          </div>
+          <button onClick={() => { localStorage.clear(); window.location.href="/login"; }} className="text-xs font-bold text-red-500">Cerrar Sesión</button>
+        </div>
         
         {children}
+
+        {/* Competency Sidebar for Mobile (at bottom) */}
+        <div className="xl:hidden mt-12 bg-white p-6 rounded-3xl shadow-soft border border-indigo-50">
+          <CompetencySidebar />
+        </div>
       </main>
 
-      {/* Right Sidebar */}
+      {/* Right Sidebar (Desktop only) */}
       <aside className="w-80 bg-white border-l p-8 hidden xl:flex flex-col h-screen sticky top-0 overflow-y-auto">
         <div className="flex items-center gap-3 mb-10 justify-end">
           <div className="flex items-center gap-2 bg-gray-100 p-2 pr-4 rounded-2xl hover:bg-gray-200 transition-all cursor-pointer group" onClick={() => { localStorage.clear(); window.location.href="/login"; }}>
