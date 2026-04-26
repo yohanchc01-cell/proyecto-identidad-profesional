@@ -19,9 +19,25 @@ const Layout = ({ children }) => {
         <div className="md:hidden flex justify-between items-center mb-6 mt-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-white text-xs">PI</div>
-            <span className="font-bold text-primary-dark">Portafolio</span>
+            <span className="font-bold text-primary-dark dark:text-white">Portafolio</span>
           </div>
-          <button onClick={() => { localStorage.clear(); window.location.href="/login"; }} className="text-xs font-bold text-red-500">Cerrar Sesión</button>
+          <div className="flex items-center gap-4">
+            <button onClick={() => {
+              const current = localStorage.getItem("theme") === "dark";
+              if (current) {
+                document.documentElement.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+              } else {
+                document.documentElement.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+              }
+              // Forzar un mini-refresh de estado si es necesario
+              window.dispatchEvent(new Event("storage"));
+            }} className="text-xl">
+              {document.documentElement.classList.contains("dark") ? '☀️' : '🌙'}
+            </button>
+            <button onClick={() => { localStorage.clear(); window.location.href="/login"; }} className="text-xs font-bold text-red-500">Cerrar Sesión</button>
+          </div>
         </div>
         
         {children}

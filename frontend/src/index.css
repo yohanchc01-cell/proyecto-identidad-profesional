@@ -19,10 +19,61 @@
   --radius-3xl: 2rem;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   body {
-    @apply bg-primary-light text-gray-800 antialiased;
+    @apply bg-primary-light text-gray-800 antialiased dark:bg-[#0B0F19] dark:text-gray-100 transition-colors duration-300;
     font-family: 'Inter', sans-serif;
+  }
+}
+
+/* 🌙 MOTOR AUTOMÁTICO DE MODO OSCURO PARA TARJETAS */
+.dark .bg-white {
+  background-color: #111827 !important;
+  color: #f3f4f6 !important;
+  border-color: #1f2937 !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .text-gray-800, .dark .text-gray-900 {
+  color: #f9fafb !important;
+}
+
+.dark .text-gray-600, .dark .text-gray-700 {
+  color: #d1d5db !important;
+}
+
+.dark .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+.dark .border-indigo-50, .dark .border-gray-100, .dark .border-gray-200 {
+  border-color: #374151 !important;
+}
+
+.dark .bg-indigo-50 {
+  background-color: #1e1b4b !important;
+  border-color: #312e81 !important;
+}
+
+/* Cuidar que el input sea legible */
+.dark input, .dark select, .dark textarea {
+  background-color: #1f2937 !important;
+  color: #fff !important;
+  border-color: #374151 !important;
+}
+
+/* Cuidar el print */
+@media print {
+  body, .bg-white, .bg-gray-50 {
+    background-color: #ffffff !important;
+    color: #000 !important;
   }
 }
 

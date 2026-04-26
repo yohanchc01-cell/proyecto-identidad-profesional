@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const location = useLocation();
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("theme") === "dark");
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -12,10 +23,17 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 xl:sticky xl:top-0 xl:w-72 bg-[#0F172A] text-white p-4 xl:p-6 flex flex-row xl:flex-col items-center justify-around xl:justify-start xl:h-screen xl:overflow-y-auto shadow-2xl z-50 no-print">
-      <div className="hidden xl:flex items-center gap-3 mb-10 px-2 mt-4">
-        <div className="w-10 h-10 bg-[#5D5FEF] rounded-xl flex items-center justify-center font-bold shadow-lg">PI</div>
-        <span className="text-xl font-bold tracking-tight">Portafolio</span>
+    <div className="fixed bottom-0 left-0 right-0 xl:sticky xl:top-0 xl:w-72 bg-[#0F172A] text-white p-4 xl:p-6 flex flex-row xl:flex-col items-center justify-around xl:justify-start xl:h-screen xl:overflow-y-auto shadow-2xl z-50 no-print transition-colors duration-300">
+      <div className="hidden xl:flex items-center gap-3 mb-10 px-2 mt-4 relative w-full justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-[#5D5FEF] rounded-xl flex items-center justify-center font-bold shadow-lg">PI</div>
+          <span className="text-xl font-bold tracking-tight">Portafolio</span>
+        </div>
+        
+        {/* Toggle Oscuro Desktop */}
+        <button onClick={() => setDarkMode(!darkMode)} className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all text-xl cursor-pointer">
+          {darkMode ? '☀️' : '🌙'}
+        </button>
       </div>
       
       <nav className="flex flex-row xl:flex-col flex-1 gap-2 w-full justify-around xl:justify-start">
