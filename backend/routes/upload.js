@@ -20,7 +20,7 @@ router.post("/", upload.single("file"), async (req, res) => {
     }
 
     const result = await cloudinary.uploader.upload(finalPath, {
-      resource_type: isPDF ? "raw" : "auto",
+      resource_type: "auto",
       folder: "portafolio"
     });
 
