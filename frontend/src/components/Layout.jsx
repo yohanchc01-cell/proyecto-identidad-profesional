@@ -14,16 +14,6 @@ const Layout = ({ children }) => {
       <Sidebar />
       
       <main className="flex-1 p-4 md:p-8 overflow-y-auto pb-24 xl:pb-8">
-        <header className="hidden md:flex justify-between items-center mb-10">
-          <div className="relative w-96">
-            <input
-              type="text"
-              placeholder="Buscar actividades, cursos..."
-              className="w-full p-4 pl-12 rounded-2xl bg-white border-none shadow-soft focus:ring-2 focus:ring-primary outline-none"
-            />
-            <span className="absolute left-4 top-4 opacity-40">🔍</span>
-          </div>
-        </header>
 
         {/* Mobile Header (Simplified) */}
         <div className="md:hidden flex justify-between items-center mb-6 mt-4">
