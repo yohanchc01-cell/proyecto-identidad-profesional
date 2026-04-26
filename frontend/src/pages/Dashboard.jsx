@@ -126,10 +126,13 @@ export default function Dashboard() {
   const colors = ["bg-folder-red", "bg-folder-blue", "bg-folder-orange", "bg-folder-green"];
 
   const getCourseAverage = (courseId) => {
-    const courseActivities = activities.filter(a => a.cursoId === courseId);
-    if (courseActivities.length === 0) return "S/N"; // Sin notas
-    const sum = courseActivities.reduce((acc, curr) => acc + Number(curr.calificacion || 0), 0);
-    return (sum / courseActivities.length).toFixed(1);
+    const id = courseId?.toString();
+    const courseActivities = activities.filter(a => (a.cursoId?._id || a.cursoId)?.toString() === id);
+    if (courseActivities.length === 0) return "S/N";
+    const valid = courseActivities.filter(a => a.calificacion !== undefined && a.calificacion !== null && a.calificacion !== "");
+    if (valid.length === 0) return "S/N";
+    const sum = valid.reduce((acc, curr) => acc + Number(curr.calificacion), 0);
+    return (sum / valid.length).toFixed(1);
   };
 
   const calculateStats = () => {
@@ -261,7 +264,7 @@ export default function Dashboard() {
                   {["🏀", "⚽", "🧠", "🚑"][idx % 4]}
                 </div>
                 <div className="bg-black/10 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider">
-                  Nota: {getCourseAverage(course._id)}
+                  Promedio: {getCourseAverage(course._id)}
                 </div>
               </div>
               <div className="mt-4">
