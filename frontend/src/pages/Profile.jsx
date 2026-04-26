@@ -47,7 +47,7 @@ export default function Profile() {
   return (
     <Layout>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-bold text-primary-dark mb-2">Mi Perfil</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-primary-dark dark:text-white mb-2">Mi Perfil</h1>
         <p className="text-sm text-gray-500 mb-8 font-medium">Mantén tu información académica actualizada.</p>
 
         <form onSubmit={handleUpdate} className="bg-white p-6 md:p-8 rounded-3xl shadow-soft space-y-6">
@@ -72,7 +72,7 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Nombre Completo</label>
             <input 
-              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary text-gray-800 font-medium"
+              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary text-gray-800 dark:text-white font-medium"
               value={formData.nombre}
               onChange={e => setFormData({...formData, nombre: e.target.value})}
             />
@@ -80,7 +80,7 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Universidad</label>
             <input 
-              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary text-gray-800 font-medium"
+              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary text-gray-800 dark:text-white font-medium"
               value={formData.universidad}
               onChange={e => setFormData({...formData, universidad: e.target.value})}
               placeholder="Ej: Universidad de Antioquia"
@@ -89,7 +89,7 @@ export default function Profile() {
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Carrera / Programa</label>
             <input 
-              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary text-gray-800 font-medium"
+              className="w-full bg-gray-50 p-4 rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary text-gray-800 dark:text-white font-medium"
               value={formData.carrera}
               onChange={e => setFormData({...formData, carrera: e.target.value})}
               placeholder="Ej: Licenciatura en Educación Física"
