@@ -44,18 +44,18 @@ export default function ProfileView() {
           <div className="grid grid-cols-1 gap-8">
             <div className="bg-gray-50 p-6 rounded-2xl">
               <span className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Universidad</span>
-              <p className="text-lg font-bold text-primary-dark">{userData?.universidad || "No definida"}</p>
+              <p className="text-lg font-bold text-primary-dark dark:text-white">{userData?.universidad || "No definida"}</p>
             </div>
 
             <div className="bg-gray-50 p-6 rounded-2xl">
               <span className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Carrera / Programa</span>
-              <p className="text-lg font-bold text-primary-dark">{userData?.carrera || "No definida"}</p>
+              <p className="text-lg font-bold text-primary-dark dark:text-white">{userData?.carrera || "No definida"}</p>
             </div>
 
           </div>
           
           <div className="mt-10 p-6 bg-indigo-50/50 rounded-2xl border border-indigo-50">
-            <p className="text-sm text-indigo-600 font-medium text-center italic">
+            <p className="text-sm text-indigo-600 dark:text-indigo-200 font-medium text-center italic">
               "La educación es el arma más poderosa para cambiar el mundo y el deporte es el lenguaje universal."
             </p>
           </div>
