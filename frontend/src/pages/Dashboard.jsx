@@ -235,38 +235,39 @@ export default function Dashboard() {
       </section>
 
       {/* Mis Cursos */}
-      <section className="mb-10 no-print">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Mis Cursos</h2>
-          <div className="flex gap-2">
+      <section className="mb-10 no-print px-1 md:px-0">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
+          <h2 className="text-2xl font-black text-gray-800">Mis Cursos</h2>
+          <div className="flex gap-2 w-full sm:w-auto">
             <input 
               value={newCourse} 
               onChange={e => setNewCourse(e.target.value)}
-              placeholder="Nombre del curso"
-              className="bg-white border-none p-3 rounded-xl shadow-sm outline-none focus:ring-2 focus:ring-primary w-48"
+              placeholder="Nueva materia..."
+              className="bg-white border-none p-3 rounded-xl shadow-soft outline-none focus:ring-2 focus:ring-primary flex-1 sm:w-48 text-sm"
             />
-            <button onClick={createCourse} className="bg-primary text-white px-4 py-2 rounded-xl font-bold">+</button>
+            <button onClick={createCourse} className="bg-primary text-white px-5 py-3 rounded-xl font-bold shadow-soft transition-all active:scale-95">+</button>
           </div>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {courses.map((course, idx) => (
             <div 
               key={course._id}
               onClick={() => navigate(`/course/${course._id}`)}
-              className={`${colors[idx % colors.length]} p-6 rounded-3xl text-white h-48 flex flex-col justify-between shadow-medium cursor-pointer hover:scale-[1.02] transition-all`}
+              className={`${colors[idx % colors.length]} p-6 rounded-[2.5rem] text-white min-h-[180px] flex flex-col justify-between shadow-medium cursor-pointer hover:scale-[1.02] active:scale-95 transition-all`}
             >
-              <div className="flex justify-between items-start">
-                <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center text-xl">
+              <div className="flex justify-between items-center">
+                <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center text-xl shadow-inner">
                   {["🏀", "⚽", "🧠", "🚑"][idx % 4]}
                 </div>
-                <div className="bg-white/30 backdrop-blur-sm px-3 py-1 rounded-lg text-xs font-bold">
-                  Promedio: {getCourseAverage(course._id)}
+                <div className="bg-black/10 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider">
+                  Nota: {getCourseAverage(course._id)}
                 </div>
               </div>
-              <div>
-                <h3 className="font-bold text-2xl mb-2 drop-shadow-sm">{course.nombre}</h3>
-                <div className="bg-white/30 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-xs font-bold w-fit hover:bg-white/50 transition-all">
-                  Ver Actividades →
+              <div className="mt-4">
+                <h3 className="font-bold text-xl md:text-2xl leading-tight mb-3 drop-shadow-md truncate">{course.nombre}</h3>
+                <div className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-[10px] font-bold w-fit uppercase tracking-widest border border-white/10">
+                  Ver Detalles
                 </div>
               </div>
             </div>

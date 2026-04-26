@@ -81,7 +81,7 @@ export default function CoursesManager() {
               <button 
                 disabled={!course.estado || course.estado === 'activo'}
                 onClick={() => setStatus(course._id, 'activo')} 
-                className={`text-[11px] font-bold uppercase tracking-wider ${(!course.estado || course.estado === 'activo') ? 'text-gray-300 cursor-not-allowed' : 'text-primary hover:underline'}`}
+                className={`text-xs font-bold ${(!course.estado || course.estado === 'activo') ? 'text-gray-300 cursor-not-allowed' : 'text-primary hover:underline'}`}
               >
                 Activar
               </button>
@@ -89,14 +89,14 @@ export default function CoursesManager() {
               <button 
                 disabled={course.estado === 'finalizado'}
                 onClick={() => setStatus(course._id, 'finalizado')} 
-                className={`text-[11px] font-bold uppercase tracking-wider ${(course.estado === 'finalizado') ? 'text-gray-300 cursor-not-allowed' : 'text-orange-500 hover:underline'}`}
+                className={`text-xs font-bold ${(course.estado === 'finalizado') ? 'text-gray-300 cursor-not-allowed' : 'text-orange-500 hover:underline'}`}
               >
-                Cerrar
+                Finalizar
               </button>
               
               <button 
                 onClick={() => deleteCourse(course._id)} 
-                className={`text-[10px] font-bold transition-all duration-300 uppercase tracking-wider ${confirmDelete.id === course._id ? 'bg-red-500 text-white px-3 py-1 rounded-lg shadow-md' : 'text-red-300 hover:text-red-500'}`}
+                className={`text-xs font-bold transition-all duration-300 ${confirmDelete.id === course._id ? 'bg-red-500 text-white px-3 py-1 rounded-lg shadow-md' : 'text-red-300 hover:text-red-500'}`}
               >
                 {confirmDelete.id === course._id ? `¿Borrar? (${confirmDelete.seconds}s)` : 'Eliminar'}
               </button>

@@ -239,13 +239,13 @@ export default function ActivitiesManager() {
               <div className="flex gap-4 items-center">
                 <button 
                   onClick={() => handleEdit(a)}
-                  className="text-gray-400 hover:text-primary transition-all text-[11px] font-bold uppercase tracking-wider"
+                  className="text-gray-400 hover:text-primary transition-all text-xs font-bold"
                 >
                   Editar
                 </button>
                 <button 
                   onClick={() => deleteActivity(a._id)} 
-                  className={`text-[11px] font-bold transition-all duration-300 uppercase tracking-wider ${confirmDelete.id === a._id ? 'bg-red-500 text-white px-3 py-1 rounded-lg shadow-md' : 'text-red-400 hover:text-red-600'}`}
+                  className={`text-xs font-bold transition-all duration-300 ${confirmDelete.id === a._id ? 'bg-red-500 text-white px-3 py-1 rounded-lg shadow-md' : 'text-red-400 hover:text-red-600'}`}
                 >
                   {confirmDelete.id === a._id ? `¿Borrar? (${confirmDelete.seconds}s)` : 'Eliminar'}
                 </button>
