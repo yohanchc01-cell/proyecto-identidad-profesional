@@ -51,20 +51,34 @@ export default function CompetencySidebar() {
   const radarData = calculateRadarData();
 
   const getRecommendation = () => {
-    const sorted = [...radarData].sort((a, b) => a.value - b.value);
-    const weakest = sorted.find(s => s.value > 0) || sorted[0];
+    const active = radarData.filter(s => s.value > 0);
+    if (active.length === 0) {
+      return <span>🤖 <strong>¡Hola! Soy tu Asesor Virtual.</strong> Comienza a registrar tus actividades para empezar a evaluar tu perfil y darte retos personalizados.</span>;
+    }
     
-    if (!weakest || weakest.value === 0) return "¡Comienza a registrar actividades para ver recomendaciones!";
-    if (weakest.value > 4.5) return "¡Excelente desempeño general! Sigue manteniendo este nivel.";
+    const sorted = [...active].sort((a, b) => a.value - b.value);
+    const weakest = sorted[0];
+    const strongest = sorted[sorted.length - 1];
+    const weakestName = skillsList.find(s=>s.id === weakest.subject)?.name || "";
+    const strongestName = skillsList.find(s=>s.id===strongest.subject)?.name || "";
     
-    const tips = {
-      comunicacion: "Intenta participar más en debates y ejercicios de oratoria.",
-      liderazgo: "Asumir la capitanía en pequeños retos fortalecerá tu liderazgo.",
-      adaptabilidad: "Prueba cambiar tus rutinas de entrenamiento para mejorar tu flexibilidad mental.",
-      gestionDeportiva: "Leer sobre administración de clubes te daría una ventaja competitiva.",
-      trabajoEquipo: "Fomenta la confianza delegando tareas importantes a tus compañeros."
-    };
-    return tips[weakest.subject] || "Sigue trabajando en tus habilidades.";
+    if (weakest.value >= 4.5) {
+      return <span>🌟 <strong>¡Nivel Élite!</strong> Todas tus competencias están sobresalientes. Destacas orgánicamente en <strong>{strongestName}</strong>. Tu nuevo reto es ser mentor y apoyar los procesos de otros estudiantes.</span>;
+    }
+
+    const shortFocus = {
+      comunicacion: "ejercicios de oratoria y expresión asertiva",
+      liderazgo: "asumir la capitanía o dirección de un grupo",
+      adaptabilidad: "enfrentarte a situaciones de crisis imprevistas",
+      gestionDeportiva: "logística y administración de recursos",
+      trabajoEquipo: "cooperación masiva y en delegar tareas"
+    }[weakest.subject] || "mejorar este punto";
+
+    if (weakest.value < 3.8) {
+      return <span>🚨 <strong>¡Cuidado!</strong> Tu habilidad comunicativa y dominio en <strong>{weakestName}</strong> está bajando ({weakest.value.toFixed(1)}/5). <strong>Te reto</strong> a que la próxima actividad que subas se enfoque netamente en {shortFocus}.</span>;
+    }
+
+    return <span>📈 Buen trabajo impulsado por tu <strong>{strongestName}</strong>, pero el punto de quiebre actual es <strong>{weakestName}</strong>. Dedícale tiempo a {shortFocus} para equilibrar tu diagrama de araña.</span>;
   };
 
   return (
@@ -77,11 +91,12 @@ export default function CompetencySidebar() {
         <RadarChartComponent data={radarData} />
       </div>
 
-      <div className="p-5 bg-indigo-50 rounded-2xl border border-indigo-100 mb-8">
-        <h4 className="text-primary font-bold text-[10px] uppercase mb-1 flex items-center gap-1">
-          <span>💡</span> Recomendación IA
+      <div className="p-5 bg-indigo-50 rounded-2xl border border-indigo-100 mb-8 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-100/50 rounded-bl-full -z-10 group-hover:scale-150 transition-all"></div>
+        <h4 className="text-indigo-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-2">
+          <span className="text-lg">🧠</span> Asesor Virtual IA
         </h4>
-        <p className="text-gray-700 text-xs italic leading-relaxed">"{getRecommendation()}"</p>
+        <p className="text-gray-700 text-xs leading-relaxed">{getRecommendation()}</p>
       </div>
 
       <div className="space-y-3">
