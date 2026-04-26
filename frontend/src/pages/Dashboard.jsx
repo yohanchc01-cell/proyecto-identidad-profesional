@@ -191,7 +191,7 @@ export default function Dashboard() {
           <section className="mb-8">
             <div className="bg-white p-10 rounded-3xl flex flex-col md:flex-row items-center justify-between shadow-soft border border-indigo-50 relative overflow-hidden">
               <div className="max-w-xl z-10 text-center md:text-left">
-                <h1 className="text-4xl font-black mb-4 text-gray-800 dark:text-white">Bienvenido, {userData?.nombre}</h1>
+                <h1 className="text-4xl font-black mb-4">Bienvenido, {userData?.nombre}</h1>
                 <p className="text-gray-500 mb-8 font-medium text-lg leading-relaxed">
                   Carrera: <span className="text-primary font-bold">{userData?.carrera || "No definida"}</span> <br/>
                   Universidad: <span className="text-primary font-bold">{userData?.universidad || "No definida"}</span>
@@ -266,7 +266,7 @@ export default function Dashboard() {
           {/* Mis Cursos */}
           <section className="mb-10 no-print px-1 md:px-0">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
-              <h2 className="text-2xl font-black text-gray-800 dark:text-white">Mis Cursos</h2>
+              <h2 className="text-2xl font-black">Mis Cursos</h2>
               <div className="flex gap-2 w-full sm:w-auto">
                 <input 
                   value={newCourse} 
