@@ -9,6 +9,11 @@ const Layout = ({ children }) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
+  // Si estamos dentro de un curso, sacar el ID para filtrar el radar
+  const courseMatch = pathname.match(/^\/course\/([a-zA-Z\d]+)$/i);
+  const currentCourseId = courseMatch ? courseMatch[1] : null;
+
   return (
     <div className="flex flex-col xl:flex-row min-h-screen bg-primary-light dark:bg-[#0B0F19] font-sans text-gray-800 dark:text-gray-100 transition-colors duration-300">
       <Sidebar />
@@ -44,7 +49,7 @@ const Layout = ({ children }) => {
 
         {/* Competency Sidebar for Mobile (at bottom) */}
         <div className="xl:hidden mt-12 bg-white p-6 rounded-3xl shadow-soft border border-indigo-50">
-          <CompetencySidebar />
+          <CompetencySidebar courseIdFilter={currentCourseId} />
         </div>
       </main>
 
@@ -60,7 +65,7 @@ const Layout = ({ children }) => {
           </div>
         </div>
 
-        <CompetencySidebar />
+        <CompetencySidebar courseIdFilter={currentCourseId} />
       </aside>
     </div>
   );

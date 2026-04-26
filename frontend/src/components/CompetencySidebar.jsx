@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import RadarChartComponent from "./RadarChart";
 
-export default function CompetencySidebar() {
+export default function CompetencySidebar({ courseIdFilter }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,11 +36,19 @@ export default function CompetencySidebar() {
     return () => window.removeEventListener("activityUpdated", fetchActivities);
   }, []);
 
-  const calculateRadarData = () => {
+  const activeActivities = useMemo(() => {
+    if (!courseIdFilter) return activities;
+    return activities.filter(a => {
+      const cId = a.cursoId?._id || a.cursoId;
+      return cId === courseIdFilter;
+    });
+  }, [activities, courseIdFilter]);
+
+  const radarData = useMemo(() => {
     const map = {};
     skillsList.forEach(s => map[s.id] = []);
     
-    activities.forEach(a => {
+    activeActivities.forEach(a => {
       a.habilidades?.forEach(h => {
         if (map[h]) map[h].push(Number(a.calificacion || 0));
       });
@@ -50,9 +58,7 @@ export default function CompetencySidebar() {
       subject: s.id,
       value: map[s.id].length ? map[s.id].reduce((a, b) => a + b, 0) / map[s.id].length : 0
     }));
-  };
-
-  const radarData = calculateRadarData();
+  }, [activeActivities]);
 
   const getRecommendation = () => {
     const active = radarData.filter(s => s.value > 0);
