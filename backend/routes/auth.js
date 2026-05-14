@@ -61,7 +61,8 @@ router.post("/login", async (req, res) => {
       email: user.email,
       universidad: user.universidad,
       carrera: user.carrera,
-      fotoUrl: user.fotoUrl
+      fotoUrl: user.fotoUrl,
+      role: user.role
     }
   });
 });
@@ -77,7 +78,7 @@ router.delete("/user/:id", async (req, res) => {
 });
 
 router.put("/user/:id", async (req, res) => {
-  const { nombre, email, documento, universidad, carrera, fotoUrl } = req.body;
+  const { nombre, email, documento, universidad, carrera, fotoUrl, password, role } = req.body;
   
   try {
     const user = await User.findById(req.params.id);
@@ -89,6 +90,12 @@ router.put("/user/:id", async (req, res) => {
     user.universidad = universidad || user.universidad;
     user.carrera = carrera || user.carrera;
     user.fotoUrl = fotoUrl || user.fotoUrl;
+    if (role) user.role = role;
+
+    if (password) {
+      const hash = await bcrypt.hash(password, 10);
+      user.password = hash;
+    }
 
     await user.save();
     

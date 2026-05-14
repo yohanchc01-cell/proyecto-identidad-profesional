@@ -14,6 +14,9 @@ export default function Dashboard() {
   const [activities, setActivities] = useState([]);
   const [activitiesLoaded, setActivitiesLoaded] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState("");
+  
+  const [publications, setPublications] = useState([]);
+  const [pubForm, setPubForm] = useState({ titulo: "", tipo: "video", contenido: "" });
 
   const [form, setForm] = useState({
     nombre: "",
@@ -84,15 +87,42 @@ export default function Dashboard() {
     }
   };
 
+  const fetchPublications = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/publications`);
+      setPublications(res.data);
+    } catch (e) {
+      console.log("Error fetching publications", e);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
       navigate("/login");
       return;
     }
-    warmupServer();      // pings el servidor inmediatamente
-    fetchDashboard();    // una sola llamada con todo
+    warmupServer();
+    fetchDashboard();
     fetchUser();
+    fetchPublications();
   }, []);
+
+  const createPublication = async () => {
+    if (!pubForm.titulo || !pubForm.contenido) return alert("Faltan datos de la publicación");
+    try {
+      await axios.post(`${API_URL}/publications`, { ...pubForm, autorId: user._id });
+      setPubForm({ titulo: "", tipo: "video", contenido: "" });
+      fetchPublications();
+    } catch(e) { alert("Error al publicar"); }
+  }
+
+  const deletePublication = async (id) => {
+    if (!window.confirm("¿Seguro que deseas borrar esto?")) return;
+    try {
+      await axios.delete(`${API_URL}/publications/${id}`);
+      fetchPublications();
+    } catch(e) { alert("Error al borrar"); }
+  }
 
   const createCourse = async () => {
     if (!newCourse || newCourse.trim() === "") return alert("Nombre obligatorio");
@@ -265,7 +295,54 @@ export default function Dashboard() {
 
           {/* Mis Cursos */}
           <section className="mb-10 no-print px-1 md:px-0">
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
+            <h2 className="text-2xl font-black text-gray-800 dark:text-white mb-6">Avisos y Tutoriales</h2>
+            
+            {user?.role === "admin" && (
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-soft mb-6 border-l-4 border-primary">
+                <h3 className="font-bold mb-4 text-gray-800 dark:text-white">Publicar Nuevo Aviso</h3>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <input value={pubForm.titulo} onChange={e => setPubForm({...pubForm, titulo: e.target.value})} placeholder="Título" className="flex-1 bg-gray-50 dark:bg-gray-700 p-3 rounded-xl outline-none" />
+                  <select value={pubForm.tipo} onChange={e => setPubForm({...pubForm, tipo: e.target.value})} className="bg-gray-50 dark:bg-gray-700 p-3 rounded-xl outline-none text-sm">
+                    <option value="video">Video (YouTube)</option>
+                    <option value="articulo">Artículo / Texto</option>
+                  </select>
+                  <input value={pubForm.contenido} onChange={e => setPubForm({...pubForm, contenido: e.target.value})} placeholder={pubForm.tipo === 'video' ? "URL de YouTube (ej. https://youtube.com/watch?v=...)" : "Cuerpo del artículo"} className="flex-[2] bg-gray-50 dark:bg-gray-700 p-3 rounded-xl outline-none" />
+                  <button onClick={createPublication} className="bg-primary text-white font-bold px-6 py-3 rounded-xl hover:scale-105 transition-all">Publicar</button>
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              {publications.map(pub => (
+                <div key={pub._id} className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-soft flex flex-col relative overflow-hidden group">
+                  {user?.role === 'admin' && (
+                    <button onClick={() => deletePublication(pub._id)} className="absolute top-4 right-4 text-red-500 font-bold hover:bg-red-50 rounded-full w-8 h-8 flex items-center justify-center transition-all z-10 opacity-0 group-hover:opacity-100">✕</button>
+                  )}
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="bg-indigo-100 text-primary text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest">{pub.tipo}</span>
+                    <span className="text-gray-400 text-xs font-bold">{new Date(pub.fecha).toLocaleDateString()}</span>
+                  </div>
+                  <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">{pub.titulo}</h3>
+                  {pub.tipo === 'video' ? (
+                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-700 shadow-inner">
+                      <iframe 
+                        width="100%" 
+                        height="100%" 
+                        src={pub.contenido.replace('watch?v=', 'embed/').split('&')[0]} 
+                        title="YouTube video player" 
+                        frameBorder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowFullScreen>
+                      </iframe>
+                    </div>
+                  ) : (
+                    <p className="text-gray-600 dark:text-gray-300 flex-1 whitespace-pre-wrap text-sm leading-relaxed">{pub.contenido}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4 border-t border-gray-100 dark:border-gray-800 pt-8">
               <h2 className="text-2xl font-black text-gray-800 dark:text-white">Mis Cursos</h2>
               <div className="flex gap-2 w-full sm:w-auto">
                 <input 

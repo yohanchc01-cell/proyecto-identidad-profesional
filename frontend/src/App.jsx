@@ -8,6 +8,7 @@ import CoursesManager from "./pages/CoursesManager";
 import ActivitiesManager from "./pages/ActivitiesManager";
 import Profile from "./pages/Profile";
 import ProfileView from "./pages/ProfileView";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
   // Asegurar que cuando se inicie la sesión (nueva pestaña o app recién abierta),
@@ -34,6 +35,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/view-profile" element={<ProfileView />} />
         <Route path="/course/:id" element={<CourseDetail />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </BrowserRouter>
   );

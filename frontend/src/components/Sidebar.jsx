@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 const Sidebar = () => {
   const location = useLocation();
   const [darkMode, setDarkMode] = useState(localStorage.getItem("theme") === "dark");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     if (darkMode) {
@@ -53,6 +54,12 @@ const Sidebar = () => {
           <span className="text-lg xl:text-base">📝</span>
           <span className="text-[10px] xl:text-base">Actividades</span>
         </Link>
+        {user?.role === "admin" && (
+          <Link to="/admin" className={`flex flex-col xl:flex-row items-center gap-1 xl:gap-4 p-2 xl:p-4 rounded-2xl transition-all font-bold ${isActive("/admin") ? "bg-red-500 text-white" : "text-red-300 hover:bg-red-500/20 hover:text-red-200"}`}>
+            <span className="text-lg xl:text-base">🛡️</span>
+            <span className="text-[10px] xl:text-base">Admin</span>
+          </Link>
+        )}
       </nav>
 
       <button 

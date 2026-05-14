@@ -47,7 +47,7 @@ export default function CompetencySidebar({ courseIdFilter }) {
   const radarData = useMemo(() => {
     const map = {};
     skillsList.forEach(s => map[s.id] = []);
-    
+
     activeActivities.forEach(a => {
       a.habilidades?.forEach(h => {
         if (map[h]) map[h].push(Number(a.calificacion || 0));
@@ -65,13 +65,13 @@ export default function CompetencySidebar({ courseIdFilter }) {
     if (active.length === 0) {
       return <span>🤖 <strong>¡Hola! Soy tu Asesor Virtual.</strong> Comienza a registrar tus actividades para empezar a evaluar tu perfil y darte retos personalizados.</span>;
     }
-    
+
     const sorted = [...active].sort((a, b) => a.value - b.value);
     const weakest = sorted[0];
     const strongest = sorted[sorted.length - 1];
-    const weakestName = skillsList.find(s=>s.id === weakest.subject)?.name || "";
-    const strongestName = skillsList.find(s=>s.id===strongest.subject)?.name || "";
-    
+    const weakestName = skillsList.find(s => s.id === weakest.subject)?.name || "";
+    const strongestName = skillsList.find(s => s.id === strongest.subject)?.name || "";
+
     if (weakest.value >= 4.5) {
       return <span>🌟 <strong>¡Nivel Élite!</strong> Todas tus competencias están sobresalientes. Destacas orgánicamente en <strong>{strongestName}</strong>. Tu nuevo reto es ser mentor y apoyar los procesos de otros estudiantes.</span>;
     }
@@ -96,7 +96,7 @@ export default function CompetencySidebar({ courseIdFilter }) {
       <h3 className="font-bold mb-6 text-gray-800 flex items-center gap-2">
         <span>📊</span> Mapa de Competencias
       </h3>
-      
+
       <div className="bg-gray-50 rounded-3xl p-4 mb-6 border border-gray-100">
         <RadarChartComponent data={radarData} />
       </div>
