@@ -17,6 +17,7 @@ export default function Dashboard() {
   
   const [publications, setPublications] = useState([]);
   const [pubForm, setPubForm] = useState({ titulo: "", tipo: "video", contenido: "" });
+  const [editingPubId, setEditingPubId] = useState(null);
 
   const [form, setForm] = useState({
     nombre: "",
@@ -115,6 +116,26 @@ export default function Dashboard() {
       fetchPublications();
     } catch(e) { alert("Error al publicar"); }
   }
+
+  const handleEditPub = (pub) => {
+    setEditingPubId(pub._id);
+    setPubForm({ titulo: pub.titulo, tipo: pub.tipo, contenido: pub.contenido });
+  };
+
+  const cancelEditPub = () => {
+    setEditingPubId(null);
+    setPubForm({ titulo: "", tipo: "video", contenido: "" });
+  };
+
+  const savePubEdit = async (id) => {
+    if (!pubForm.titulo || !pubForm.contenido) return alert("Faltan datos");
+    try {
+      await axios.put(`${API_URL}/publications/${id}`, pubForm);
+      setEditingPubId(null);
+      setPubForm({ titulo: "", tipo: "video", contenido: "" });
+      fetchPublications();
+    } catch(e) { alert("Error al actualizar"); }
+  };
 
   const deletePublication = async (id) => {
     if (!window.confirm("¿Seguro que deseas borrar esto?")) return;
@@ -354,7 +375,7 @@ export default function Dashboard() {
           <section className="mb-10 no-print px-1 md:px-0">
             <h2 className="text-2xl font-black text-gray-800 dark:text-white mb-6 pt-8 border-t border-gray-100 dark:border-gray-800">Avisos y Tutoriales</h2>
             
-            {user?.role === "admin" && (
+            {user?.role === "admin" && !editingPubId && (
               <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-soft mb-6 border-l-4 border-primary">
                 <h3 className="font-bold mb-4 text-gray-800 dark:text-white">Publicar Nuevo Aviso</h3>
                 <div className="flex flex-col md:flex-row gap-4">
@@ -372,28 +393,50 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               {publications.map(pub => (
                 <div key={pub._id} className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-soft flex flex-col relative overflow-hidden group">
-                  {user?.role === 'admin' && (
-                    <button onClick={() => deletePublication(pub._id)} className="absolute top-4 right-4 text-red-500 font-bold hover:bg-red-50 rounded-full w-8 h-8 flex items-center justify-center transition-all z-10 opacity-0 group-hover:opacity-100">✕</button>
+                  {user?.role === 'admin' && editingPubId !== pub._id && (
+                    <div className="absolute top-4 right-4 flex gap-1 z-10 opacity-0 group-hover:opacity-100 transition-all">
+                      <button onClick={() => handleEditPub(pub)} className="text-folder-blue font-bold hover:bg-blue-50 rounded-full w-8 h-8 flex items-center justify-center">✎</button>
+                      <button onClick={() => deletePublication(pub._id)} className="text-red-500 font-bold hover:bg-red-50 rounded-full w-8 h-8 flex items-center justify-center">✕</button>
+                    </div>
                   )}
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="bg-indigo-100 text-primary text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest">{pub.tipo}</span>
-                    <span className="text-gray-400 text-xs font-bold">{new Date(pub.fecha).toLocaleDateString()}</span>
-                  </div>
-                  <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">{pub.titulo}</h3>
-                  {pub.tipo === 'video' ? (
-                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-700 shadow-inner">
-                      <iframe 
-                        width="100%" 
-                        height="100%" 
-                        src={getYouTubeEmbedUrl(pub.contenido)} 
-                        title="YouTube video player" 
-                        frameBorder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowFullScreen>
-                      </iframe>
+
+                  {editingPubId === pub._id ? (
+                    <div className="flex flex-col gap-3">
+                      <h4 className="font-bold text-sm text-primary uppercase mb-2">Editando Aviso</h4>
+                      <input value={pubForm.titulo} onChange={e => setPubForm({...pubForm, titulo: e.target.value})} className="bg-gray-50 dark:bg-gray-700 p-2 rounded-xl outline-none text-sm" placeholder="Título" />
+                      <select value={pubForm.tipo} onChange={e => setPubForm({...pubForm, tipo: e.target.value})} className="bg-gray-50 dark:bg-gray-700 p-2 rounded-xl outline-none text-sm">
+                        <option value="video">Video (YouTube)</option>
+                        <option value="articulo">Artículo / Texto</option>
+                      </select>
+                      <input value={pubForm.contenido} onChange={e => setPubForm({...pubForm, contenido: e.target.value})} className="bg-gray-50 dark:bg-gray-700 p-2 rounded-xl outline-none text-sm" placeholder="Contenido" />
+                      <div className="flex gap-2 mt-2">
+                        <button onClick={() => savePubEdit(pub._id)} className="bg-primary text-white text-xs font-bold px-4 py-2 rounded-xl flex-1">Guardar</button>
+                        <button onClick={cancelEditPub} className="bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2 rounded-xl">Cancelar</button>
+                      </div>
                     </div>
                   ) : (
-                    <p className="text-gray-600 dark:text-gray-300 flex-1 whitespace-pre-wrap text-sm leading-relaxed">{pub.contenido}</p>
+                    <>
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="bg-indigo-100 text-primary text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-widest">{pub.tipo}</span>
+                        <span className="text-gray-400 text-xs font-bold">{new Date(pub.fecha).toLocaleDateString()}</span>
+                      </div>
+                      <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-white leading-tight">{pub.titulo}</h3>
+                      {pub.tipo === 'video' ? (
+                        <div className="aspect-video w-full rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-700 shadow-inner">
+                          <iframe 
+                            width="100%" 
+                            height="100%" 
+                            src={getYouTubeEmbedUrl(pub.contenido)} 
+                            title="YouTube video player" 
+                            frameBorder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowFullScreen>
+                          </iframe>
+                        </div>
+                      ) : (
+                        <p className="text-gray-600 dark:text-gray-300 flex-1 whitespace-pre-wrap text-sm leading-relaxed">{pub.contenido}</p>
+                      )}
+                    </>
                   )}
                 </div>
               ))}
