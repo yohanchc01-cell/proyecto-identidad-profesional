@@ -124,6 +124,22 @@ export default function Dashboard() {
     } catch(e) { alert("Error al borrar"); }
   }
 
+  const getYouTubeEmbedUrl = (url) => {
+    let videoId = '';
+    try {
+      if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
+      } else if (url.includes('watch?v=')) {
+        videoId = url.split('watch?v=')[1].split('&')[0];
+      } else if (url.includes('embed/')) {
+        return url;
+      }
+    } catch (e) {
+      return url;
+    }
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+  };
+
   const createCourse = async () => {
     if (!newCourse || newCourse.trim() === "") return alert("Nombre obligatorio");
     await axios.post(`${API_URL}/courses`, { nombre: newCourse.trim(), userId: user._id });
@@ -369,7 +385,7 @@ export default function Dashboard() {
                       <iframe 
                         width="100%" 
                         height="100%" 
-                        src={pub.contenido.replace('watch?v=', 'embed/').split('&')[0]} 
+                        src={getYouTubeEmbedUrl(pub.contenido)} 
                         title="YouTube video player" 
                         frameBorder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
