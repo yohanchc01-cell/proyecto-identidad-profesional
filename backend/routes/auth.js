@@ -2,18 +2,17 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
+const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
 const router = express.Router();
 
 // Configuración de transporte (Ejemplo genérico para el usuario)
 const transporter = nodemailer.createTransport({
-  host: "smtp.mailtrap.io", // Ideal para pruebas gratuitas
-  port: 2525,
+  service: "gmail",
   auth: {
-    user: process.env.MAIL_USER || "user_placeholder",
-    pass: process.env.MAIL_PASS || "pass_placeholder"
+    user: process.env.MAIL_USER || "ip.identidad.profesional@gmail.com",
+    pass: process.env.MAIL_PASS || "adminIP1"
   }
 });
 
@@ -21,6 +20,11 @@ router.post("/register", async (req, res) => {
   const { documento, nombre, email, password, universidad, carrera } = req.body;
 
   try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ errorCode: "EMAIL_EXISTS", error: "El correo ya está registrado" });
+    }
+
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({
       documento,
@@ -34,6 +38,59 @@ router.post("/register", async (req, res) => {
     res.json({ message: "Usuario registrado con éxito ✅", user });
   } catch (error) {
     res.status(500).json({ error: "Error al registrar" });
+  }
+});
+
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: "No existe una cuenta con este correo" });
+    }
+
+    const token = crypto.randomBytes(20).toString("hex");
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hora
+    await user.save();
+
+    const resetUrl = `https://proyecto-identidad-profesional.vercel.app/reset-password/${token}`;
+    
+    const mailOptions = {
+      from: '"Identidad Profesional" <ip.identidad.profesional@gmail.com>',
+      to: user.email,
+      subject: "Recuperación de Contraseña",
+      text: `Hola ${user.nombre},\n\nHas solicitado restablecer tu contraseña. Haz clic en el siguiente enlace o pégalo en tu navegador:\n\n${resetUrl}\n\nSi no solicitaste esto, ignora este correo.\n`
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "Correo de recuperación enviado" });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({ error: "Error al procesar la solicitud de recuperación" });
+  }
+});
+
+router.post("/reset-password/:token", async (req, res) => {
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: "El token es inválido o ha expirado" });
+    }
+
+    const hash = await bcrypt.hash(req.body.password, 10);
+    user.password = hash;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({ message: "Contraseña actualizada correctamente" });
+  } catch (error) {
+    res.status(500).json({ error: "Error al restablecer la contraseña" });
   }
 });
 

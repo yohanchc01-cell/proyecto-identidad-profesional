@@ -9,6 +9,8 @@ import ActivitiesManager from "./pages/ActivitiesManager";
 import Profile from "./pages/Profile";
 import ProfileView from "./pages/ProfileView";
 import AdminPanel from "./pages/AdminPanel";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   // Asegurar que cuando se inicie la sesión (nueva pestaña o app recién abierta),
@@ -28,6 +30,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/courses" element={<CoursesManager />} />

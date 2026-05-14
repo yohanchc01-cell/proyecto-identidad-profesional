@@ -22,7 +22,12 @@ export default function Register() {
       alert(res.data.message);
       navigate("/login");
     } catch (error) {
-      alert("Error al registrar ❌");
+      if (error.response && error.response.status === 409) {
+        alert("El correo ya está registrado. Por favor, inicia sesión.");
+        navigate("/login");
+      } else {
+        alert("Error al registrar ❌");
+      }
     }
   };
 

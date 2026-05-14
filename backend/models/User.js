@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema({
   universidad: String,
   carrera: String,
   fotoUrl: String,
-  role: { type: String, enum: ['student', 'admin'], default: 'student' }
+  role: { type: String, enum: ['student', 'admin'], default: 'student' },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 });
 
 module.exports = mongoose.model("User", userSchema);

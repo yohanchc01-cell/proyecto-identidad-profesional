@@ -60,7 +60,10 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+        <div className="mt-8 pt-6 border-t border-gray-100 text-center flex flex-col gap-3">
+          <p className="text-gray-500 text-sm">
+            <Link to="/forgot-password" className="text-primary font-bold hover:underline">¿Olvidaste tu contraseña?</Link>
+          </p>
           <p className="text-gray-500 text-sm">
             ¿No tienes cuenta? <Link to="/register" className="text-primary font-bold hover:underline">Regístrate ahora</Link>
           </p>
