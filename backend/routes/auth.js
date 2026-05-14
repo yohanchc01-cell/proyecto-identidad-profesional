@@ -105,4 +105,13 @@ router.put("/user/:id", async (req, res) => {
   }
 });
 
+router.delete("/user/:id", async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "Usuario eliminado" });
+  } catch (error) {
+    res.status(500).json("Error al eliminar usuario");
+  }
+});
+
 module.exports = router;

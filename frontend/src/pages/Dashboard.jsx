@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [publications, setPublications] = useState([]);
   const [pubForm, setPubForm] = useState({ titulo: "", tipo: "video", contenido: "" });
   const [editingPubId, setEditingPubId] = useState(null);
+  const [confirmDeletePub, setConfirmDeletePub] = useState({ id: null, seconds: 0 });
 
   const [form, setForm] = useState({
     nombre: "",
@@ -138,9 +139,23 @@ export default function Dashboard() {
   };
 
   const deletePublication = async (id) => {
-    if (!window.confirm("¿Seguro que deseas borrar esto?")) return;
+    if (confirmDeletePub.id !== id) {
+      setConfirmDeletePub({ id: id, seconds: 4 });
+      const timer = setInterval(() => {
+        setConfirmDeletePub(prev => {
+          if (prev.seconds <= 1) {
+            clearInterval(timer);
+            return { id: null, seconds: 0 };
+          }
+          return { ...prev, seconds: prev.seconds - 1 };
+        });
+      }, 1000);
+      return;
+    }
+
     try {
       await axios.delete(`${API_URL}/publications/${id}`);
+      setConfirmDeletePub({ id: null, seconds: 0 });
       fetchPublications();
     } catch(e) { alert("Error al borrar"); }
   }
@@ -394,9 +409,11 @@ export default function Dashboard() {
               {publications.map(pub => (
                 <div key={pub._id} className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-soft flex flex-col relative overflow-hidden group">
                   {user?.role === 'admin' && editingPubId !== pub._id && (
-                    <div className="absolute top-4 right-4 flex gap-1 z-10 opacity-0 group-hover:opacity-100 transition-all">
+                    <div className="absolute top-4 right-4 flex gap-1 z-10 opacity-0 group-hover:opacity-100 transition-all items-center">
                       <button onClick={() => handleEditPub(pub)} className="text-folder-blue font-bold hover:bg-blue-50 rounded-full w-8 h-8 flex items-center justify-center">✎</button>
-                      <button onClick={() => deletePublication(pub._id)} className="text-red-500 font-bold hover:bg-red-50 rounded-full w-8 h-8 flex items-center justify-center">✕</button>
+                      <button onClick={() => deletePublication(pub._id)} className={`font-bold rounded-full h-8 flex items-center justify-center transition-all ${confirmDeletePub.id === pub._id ? 'bg-red-500 text-white px-3 w-auto text-xs' : 'text-red-500 hover:bg-red-50 w-8'}`}>
+                        {confirmDeletePub.id === pub._id ? `¿Borrar? ${confirmDeletePub.seconds}s` : '✕'}
+                      </button>
                     </div>
                   )}
 

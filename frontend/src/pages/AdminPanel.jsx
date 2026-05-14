@@ -7,6 +7,7 @@ export default function AdminPanel() {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState({ nombre: "", email: "", documento: "", universidad: "", carrera: "", password: "", role: "" });
+  const [confirmDelete, setConfirmDelete] = useState({ id: null, seconds: 0 });
   const navigate = useNavigate();
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
@@ -29,10 +30,24 @@ export default function AdminPanel() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("¿Estás seguro de eliminar a este usuario?")) return;
+  const handleDelete = async (userId) => {
+    if (confirmDelete.id !== userId) {
+      setConfirmDelete({ id: userId, seconds: 4 });
+      const timer = setInterval(() => {
+        setConfirmDelete(prev => {
+          if (prev.seconds <= 1) {
+            clearInterval(timer);
+            return { id: null, seconds: 0 };
+          }
+          return { ...prev, seconds: prev.seconds - 1 };
+        });
+      }, 1000);
+      return;
+    }
+
     try {
-      await axios.delete(`${API_URL}/auth/user/${id}`);
+      await axios.delete(`${API_URL}/auth/user/${userId}`);
+      setConfirmDelete({ id: null, seconds: 0 });
       fetchUsers();
     } catch (error) {
       alert("Error al eliminar");
@@ -95,7 +110,9 @@ export default function AdminPanel() {
                     <td className="py-4 text-right">
                       <button onClick={() => handleEdit(u)} className="bg-folder-blue text-white text-xs px-3 py-1 rounded-lg mr-2 font-bold hover:scale-105 transition-all">Editar</button>
                       {u._id !== currentUser._id && (
-                        <button onClick={() => handleDelete(u._id)} className="bg-folder-red text-white text-xs px-3 py-1 rounded-lg font-bold hover:scale-105 transition-all">Eliminar</button>
+                        <button onClick={() => handleDelete(u._id)} className={`text-xs px-3 py-1 rounded-lg font-bold transition-all ${confirmDelete.id === u._id ? 'bg-red-500 text-white shadow-lg scale-105' : 'bg-folder-red text-white hover:scale-105'}`}>
+                          {confirmDelete.id === u._id ? `¿Borrar? (${confirmDelete.seconds}s)` : 'Eliminar'}
+                        </button>
                       )}
                     </td>
                   </tr>
