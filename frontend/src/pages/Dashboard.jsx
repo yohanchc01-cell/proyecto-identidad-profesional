@@ -295,7 +295,48 @@ export default function Dashboard() {
 
           {/* Mis Cursos */}
           <section className="mb-10 no-print px-1 md:px-0">
-            <h2 className="text-2xl font-black text-gray-800 dark:text-white mb-6">Avisos y Tutoriales</h2>
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4">
+              <h2 className="text-2xl font-black text-gray-800 dark:text-white">Mis Cursos</h2>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <input 
+                  value={newCourse} 
+                  onChange={e => setNewCourse(e.target.value)}
+                  placeholder="Nueva materia..."
+                  className="bg-white border-none p-3 rounded-xl shadow-soft outline-none focus:ring-2 focus:ring-primary flex-1 sm:w-48 text-sm"
+                />
+                <button onClick={createCourse} className="bg-primary text-white px-5 py-3 rounded-xl font-bold shadow-soft transition-all active:scale-95">+</button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {courses.map((course, idx) => (
+                <div 
+                  key={course._id}
+                  onClick={() => navigate(`/course/${course._id}`)}
+                  className={`${colors[idx % colors.length]} p-6 rounded-[2.5rem] text-white min-h-[180px] flex flex-col justify-between shadow-medium cursor-pointer hover:scale-[1.02] active:scale-95 transition-all`}
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                      {["🏀", "⚽", "🧠", "🚑"][idx % 4]}
+                    </div>
+                    <div className="bg-black/10 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider">
+                      {activitiesLoaded ? `Promedio: ${getCourseAverage(course._id)}` : "Cargando..."}
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="font-bold text-xl md:text-2xl leading-tight mb-3 drop-shadow-md truncate">{course.nombre}</h3>
+                    <div className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-[10px] font-bold w-fit uppercase tracking-widest border border-white/10">
+                      Ver Detalles
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Avisos y Tutoriales */}
+          <section className="mb-10 no-print px-1 md:px-0">
+            <h2 className="text-2xl font-black text-gray-800 dark:text-white mb-6 pt-8 border-t border-gray-100 dark:border-gray-800">Avisos y Tutoriales</h2>
             
             {user?.role === "admin" && (
               <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-soft mb-6 border-l-4 border-primary">
@@ -338,44 +379,6 @@ export default function Dashboard() {
                   ) : (
                     <p className="text-gray-600 dark:text-gray-300 flex-1 whitespace-pre-wrap text-sm leading-relaxed">{pub.contenido}</p>
                   )}
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6 gap-4 border-t border-gray-100 dark:border-gray-800 pt-8">
-              <h2 className="text-2xl font-black text-gray-800 dark:text-white">Mis Cursos</h2>
-              <div className="flex gap-2 w-full sm:w-auto">
-                <input 
-                  value={newCourse} 
-                  onChange={e => setNewCourse(e.target.value)}
-                  placeholder="Nueva materia..."
-                  className="bg-white border-none p-3 rounded-xl shadow-soft outline-none focus:ring-2 focus:ring-primary flex-1 sm:w-48 text-sm"
-                />
-                <button onClick={createCourse} className="bg-primary text-white px-5 py-3 rounded-xl font-bold shadow-soft transition-all active:scale-95">+</button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {courses.map((course, idx) => (
-                <div 
-                  key={course._id}
-                  onClick={() => navigate(`/course/${course._id}`)}
-                  className={`${colors[idx % colors.length]} p-6 rounded-[2.5rem] text-white min-h-[180px] flex flex-col justify-between shadow-medium cursor-pointer hover:scale-[1.02] active:scale-95 transition-all`}
-                >
-                  <div className="flex justify-between items-center">
-                    <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center text-xl shadow-inner">
-                      {["🏀", "⚽", "🧠", "🚑"][idx % 4]}
-                    </div>
-                    <div className="bg-black/10 backdrop-blur-md px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider">
-                      {activitiesLoaded ? `Promedio: ${getCourseAverage(course._id)}` : "Cargando..."}
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <h3 className="font-bold text-xl md:text-2xl leading-tight mb-3 drop-shadow-md truncate">{course.nombre}</h3>
-                    <div className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-[10px] font-bold w-fit uppercase tracking-widest border border-white/10">
-                      Ver Detalles
-                    </div>
-                  </div>
                 </div>
               ))}
             </div>
